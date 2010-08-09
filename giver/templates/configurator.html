@@ -1,0 +1,111 @@
+{% load i18n %}
+{% load markup %}
+{% load humanize %}
+{% load cache %}
+{% spaceless %}
+{% with configurator as c %}
+
+{% if user.is_authenticated %}
+<p>
+	<a href="{% url configurator.creator.views.components_editor configurator.computermodel.alias %}">
+		{% trans "Edit components" %}
+	</a>
+</p>
+{% endif %}
+
+{% for subsystem in c.subsystems %}
+<h2> {{ subsystem.0.description }} </h2>
+
+{% if subsystem.0.explanation %}
+	<div class="configurator-component-description">
+		{% cache cache_timeout subsystem_explanation subsystem.0.explanation %}
+		{{ subsystem.0.explanation|restructuredtext }}
+		{% endcache %}
+	</div>
+{% endif %}
+
+{% for g in subsystem.1 %}
+	{% for group in c.groups %}
+	{% ifequal group.name g.name %}
+
+	{% if g.description %}<h3>{{ g.description }}</h3>{% endif %}
+	<ul>
+		{% for component in group.components %}
+		<li {% if component.hidden %}class="configurator-component-hidden"{% endif %}>
+		<div class="input-section">
+			{% if component.hidden %}
+			<input type="{{ group.input_type }}" disabled="disabled" />
+			{% else %}
+			<input type="{{ group.input_type }}"
+			       name="{{ group.name }}"
+			       id="input-{{ component.object.id }}"
+			       value="{{ component.object.id }}"
+			       onchange="configurate_input({{ component.object.id }})"
+			       {% if component.quantity %}checked="checked"{% endif %} />
+
+			<select name="select-{{ component.object.id }}"
+				id="select-{{ component.object.id }}"
+				onchange="configurate_select( {{ component.object.id }}, this.value )">
+				{% for selection in component.selections %}
+					<option value="{{ selection }}"
+						{% ifequal selection component.quantity %}
+						selected="selected"
+						{% endifequal %} >
+					{{ selection }}
+					</option>
+				{% endfor %}
+			</select>
+			{% endif %}
+		</div>
+
+		<label for="input-{{ component.object.id }}" class="configurator-component-name">
+			{{ component.object.name }}
+		</label>
+
+		<label for="input-{{ component.object.id }}">
+			<div class="configurator-prices">
+				<div class="configurator-price-single">
+					{% cache cache_timeout price-single component.price_single %}
+					{{ component.price_single|intcomma }}&#160;
+					{% endcache %}
+					<span class="configurator-currency">{{ c.currency }}</span>
+				</div>
+
+				{% if component.price_total %}
+					<div class="configurator-price-total">
+					{{ component.price_total|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span>
+					</div>
+				{% endif %}
+			</div>
+		</label>
+
+		{% if component.object.description %}
+			<label for="input-{{ component.object.id }}">
+				<div class="configurator-component-description">
+					{% cache cache_timeout component_description component.object.description %}
+					{{ component.object.description|restructuredtext }}
+					{% endcache %}
+				</div>
+			</label>
+		{% endif %}
+		</li>
+		{% endfor %}
+	</ul>
+	{% endifequal %}
+	{% endfor %}
+{% endfor %}
+{% endfor %}
+
+<div class="total"><h2>{% trans "Total price" %}:</h2>
+    <div>{{ c.price|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span></div>
+</div>
+
+<div class="submit">
+    <input type="hidden" id="ids" name="ids" value="{{ c.ids }}" />
+    <input type="button" id="add_to_cart_button" value="{% trans "Add to cart" %}"
+       onclick="cart_add('{% url configurator.carter.views.order_create configurator.computermodel.alias %}')"
+    />
+</div>
+
+{% endwith %}
+{% endspaceless %}

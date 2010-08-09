@@ -1,0 +1,17 @@
+{% extends "xhtml.html" %}
+
+{% block header %}
+	<link rel="stylesheet" type="text/css" href="{{ settings.ADMIN_MEDIA_PREFIX }}css/base.css" />
+	<link rel="stylesheet" type="text/css" href="{{ settings.MEDIA_URL }}configurator.css" />
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript" src="{{ settings.MEDIA_URL }}prototype.js"></script>
+	<script type="text/javascript" src="{{ settings.MEDIA_URL }}configurator.js"></script>
+{% endblock %}
+
+{% block body %}
+	<body>
+	{% block content %}{% endblock %}
+	</body>
+{% endblock %}

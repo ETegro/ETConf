@@ -1,0 +1,34 @@
+{% load i18n %}
+
+<div class="form_field_wrapper">
+	{{ form.name.errors }}
+	<label for="{{ component.id }}_name">{% trans "Name" %}</label><br/>
+	{{ form.name }}
+</div>
+
+<div class="form_field_wrapper">
+	{{ form.description.errors }}
+	<label for="{{ component.id }}_description">{% trans "Description" %}</label><br/>
+	{{ form.description }}
+</div>
+
+<div class="form_field_wrapper">
+	{{ form.price.errors }}
+	<label for="{{ component.id }}_price">{% trans "Price" %}</label><br/>
+	{{ form.price }}
+</div>
+
+<div class="form_field_wrapper">
+	{{ form.is_percentage.errors }}
+	<label for="{{ component.id }}_is_percentage">{% trans "Percentage" %}</label><br/>
+	{{ form.is_percentage }}
+</div>
+
+<p>
+	<input type="button"
+	       value="{% trans "Apply" %}"
+	       onclick='component_edit_submit( "{{ component.component_group.name }}", {{ component.id }} )' />
+	<input type="button"
+	       value="{% trans "Cancel" %}"
+	       onclick='component_edit_cancel( "{{ component.component_group.name }}" )' />
+</p>

@@ -1,0 +1,54 @@
+{% extends "etegros.html" %}
+{% load i18n %}
+{% load markup %}
+{% load cache %}
+
+{% block title %}{% trans "Your cart" %}{% endblock %}
+
+{% block main %}
+
+<div style="float: left; width: 50%">
+	<table class="spec">
+	<tr>
+		<th>{% trans "Product" %}</th>
+		<th>{% trans "Price" %}</th>
+	</tr>
+
+	{% for order in orders %}
+	<tr>
+		<th>
+			{{ order.computer_model.name }}
+			<a href="{% url configurator.carter.views.order_remove order.id %}">[X]</a>
+		</th>
+		<th>{{ order.price }} {{ order.currency }}</th>
+	</tr>
+	<tr>
+		<td colspan="2"><dl>
+		{% for group in order.groups %}
+			<dt>
+				{% cache cache_timeout group_description group.0.subsystem.description %}
+				{{ group.0.subsystem.description|restructuredtext }}
+				{% endcache %}
+			</dt>
+			<dd>
+			{% for component in group.1 %}
+				{{ component.quantity }}
+				X
+				{{ component.component.name }}
+				<br/>
+			{% endfor %}
+			</dd>
+		{% endfor %}
+		</dl></td>
+	</tr>
+	{% endfor %}
+	</table>
+
+	<h2>{% trans "Total price" %}:</h2> {{ total_price }} {{ currency }}
+</div>
+
+<div style="float: right">
+	{% include "submit_form.html" %}
+</div>
+
+{% endblock %}

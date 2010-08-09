@@ -1,0 +1,43 @@
+{% load i18n %}
+
+<form method="post" action="{% url configurator.carter.views.order_show %}">
+
+<div class="form_field_wrapper">
+	{{ form.company.errors }}
+	<label for="id_company">{% trans "Company" %}</label><br/>
+	{{ form.company }}
+</div>
+
+<div class="form_field_wrapper">
+	{{ form.name.errors }}
+	<label for="id_name">{% trans "Your name" %} *</label><br/>
+	{{ form.name }}
+</div>
+
+<div class="form_field_wrapper">
+	{{ form.address.errors }}
+	<label for="id_address">{% trans "Delivery address" %}</label><br/>
+	{{ form.address }}
+</div>
+
+<div class="form_field_wrapper">
+	{{ form.email.errors }}
+	<label for="id_email">{% trans "Your email" %} *</label><br/>
+	{{ form.email }}
+</div>
+
+<div class="form_field_wrapper">
+	{{ form.telephone.errors }}
+	<label for="id_telephone">{% trans "Contact telephone" %} *</label><br/>
+	{{ form.telephone }}
+</div>
+
+<div class="form_field_wrapper">
+	{{ form.comment.errors }}
+	<label for="id_comment">{% trans "Comment" %}</label><br/>
+	{{ form.comment }}
+</div>
+
+<input type="submit" value="{% trans "Send" %}" />
+
+</form>

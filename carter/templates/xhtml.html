@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+<head>
+	<!-- Because of fucking lame Microsoft's browsers, that do not understand XHTML at all, we are using old "text/html" -->
+	<!-- <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8" /> -->
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<title>{% block title %}{% endblock %}</title>
+	{% block header %}{% endblock %}
+	{% block javascript %}{% endblock %}
+</head>
+
+{% block body %}{% endblock %}
+
+</html>

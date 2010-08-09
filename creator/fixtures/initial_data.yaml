@@ -1,0 +1,4 @@
+- fields: {is_default: true, name: dummy, postfix: DUM, rate: 1.0}
+  model: creator.currency
+  pk: 1
+

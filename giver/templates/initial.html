@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Configurator" %}{% endblock %}
+
+{% block content %}
+<form action="" method="post">
+	<input type="hidden" id="url" name="url" value="{% url configurator.giver.views.perform configurator.computermodel.alias %}" />
+	<div id="loader">{% trans "Ready" %}</div>
+	<div id="configurator">
+		{% include "configurator.html" %}
+	</div>
+</form>
+{% endblock %}

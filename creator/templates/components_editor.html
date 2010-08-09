@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ computermodel }} {% trans "editing" %}{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ settings.MEDIA_URL }}scriptaculous/scriptaculous.js"></script>
+
+<script type="text/javascript">{% comment %}<![CDATA[{% endcomment %}
+{% include "components_editor.js" %}
+{% comment %}]]>{% endcomment %}</script>
+
+{% endblock %}
+
+{% block content %}
+
+<select name="foo" id="foo" onchange='switch_model( this.value )'>
+	{% for cm in computermodels %}
+		<option value="{{ cm.alias }}" {% ifequal cm computermodel %}selected="yes"{% endifequal %}>
+			{{ cm }}
+		</option>
+	{% endfor %}
+</select>
+
+| <a href="#" onclick='show_page("components-editor-page"); return false'>{% trans "Components" %}</a>
+| <a href="#" onclick='show_page("specification-editor-page"); return false'>{% trans "Specifications" %}</a>
+| <a href="#" onclick='show_page("computermodel-editor-page"); return false'>{% trans "Computer model" %}</a>
+
+<hr/>
+
+<div id="components-editor-page">{% include "components_editor_page.html" %}</div>
+<div id="specification-editor-page">{% include "specification_editor_page.html" %}</div>
+<div id="computermodel-editor-page">{% include "computermodel_editor_page.html" %}</div>
+
+{% endblock %}

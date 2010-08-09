@@ -1,0 +1,372 @@
+# Configurator
+# Copyright (C) 2010 Sergey Matveev (sergey.matveev@etegro.com)
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: configurator 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-07-23 12:51+0400\n"
+"PO-Revision-Date: 2010-03-27 17:33+0300\n"
+"Last-Translator: Sergey Matveev <sergey.matveev@etegro.com>\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: carter/admin.py:13 carter/models.py:34
+msgid "Body"
+msgstr "Тело"
+
+#: carter/forms.py:9 carter/models.py:28 carter/templates/submit_form.html:7
+#: giver/forms.py:8 giver/templates/computermodel_request_form.html:5
+msgid "Company"
+msgstr "Компания"
+
+#: carter/forms.py:10 carter/templates/submit_form.html:13 giver/forms.py:9
+#: giver/templates/computermodel_request_form.html:11
+msgid "Your name"
+msgstr "Ваше имя"
+
+#: carter/forms.py:11 carter/models.py:30 carter/templates/submit_form.html:19
+#: giver/forms.py:10 giver/templates/computermodel_request_form.html:17
+msgid "Delivery address"
+msgstr "Адрес доставки"
+
+#: carter/forms.py:15 carter/templates/submit_form.html:25 giver/forms.py:11
+#: giver/templates/computermodel_request_form.html:23
+msgid "Your email"
+msgstr "Ваш email"
+
+#: carter/forms.py:16 carter/models.py:32 carter/templates/submit_form.html:31
+#: giver/forms.py:12 giver/templates/computermodel_request_form.html:29
+msgid "Contact telephone"
+msgstr "Контактный телефон"
+
+#: carter/forms.py:17 carter/models.py:33 carter/templates/submit_form.html:37
+msgid "Comment"
+msgstr "Примечание"
+
+#: carter/models.py:29 creator/forms.py:8 creator/models.py:15
+#: creator/models.py:32 creator/models.py:42 creator/models.py:57
+#: creator/models.py:74 creator/models.py:159
+#: creator/templates/component_edit.html:5
+msgid "Name"
+msgstr "Имя"
+
+#: carter/models.py:31
+msgid "Email"
+msgstr "Email"
+
+#: carter/models.py:35 carter/templates/cart.html:14 creator/forms.py:15
+#: creator/models.py:76 creator/templates/component_edit.html:17
+msgid "Price"
+msgstr "Цена"
+
+#: carter/models.py:36 creator/models.py:28
+msgid "Currency"
+msgstr "Валюта"
+
+#: carter/models.py:42
+msgid "OrderRequest"
+msgstr "Заказ"
+
+#: carter/models.py:43
+msgid "OrderRequests"
+msgstr "Заказы"
+
+#: carter/views.py:95
+#, python-format
+msgid "Order %i from"
+msgstr "Заказ %i от"
+
+#: carter/templates/cart.html:6 carter/templates/empty.html:4
+msgid "Your cart"
+msgstr "Ваша корзина"
+
+#: carter/templates/cart.html:13
+msgid "Product"
+msgstr "Продукт"
+
+#: carter/templates/cart.html:47 giver/templates/configurator.html:99
+msgid "Total price"
+msgstr "Итоговая цена"
+
+#: carter/templates/empty.html:5
+msgid "Your cart is empty"
+msgstr "Ваша корзина пуста"
+
+#: carter/templates/error.html:4 carter/templates/error.html.py:8
+msgid "Error"
+msgstr "Ошибка"
+
+#: carter/templates/submit_form.html:41
+#: giver/templates/computermodel_request_form.html:40
+msgid "Send"
+msgstr "Отправить"
+
+#: carter/templates/successful_submit.html:4
+msgid "Successfully created order request"
+msgstr "Успешно сделанный заказ"
+
+#: creator/admin.py:25 creator/admin.py:37 creator/admin.py:130
+msgid "Ordering"
+msgstr "Порядок"
+
+#: creator/admin.py:76
+msgid "Ordering/Clone"
+msgstr "Порядок/Клон"
+
+#: creator/admin.py:78
+msgid "Requirements"
+msgstr "Требования"
+
+#: creator/admin.py:80 creator/models.py:115
+msgid "Providings"
+msgstr "Обеспечения"
+
+#: creator/admin.py:109 creator/views.py:50 creator/views.py:73
+msgid "Clone"
+msgstr "Клон"
+
+#: creator/admin.py:111 creator/models.py:209
+#: creator/templates/components_editor.html:28
+msgid "Specifications"
+msgstr "Спецификации"
+
+#: creator/forms.py:11 creator/forms.py:24 creator/models.py:33
+#: creator/models.py:43 creator/models.py:58 creator/models.py:75
+#: creator/models.py:160 creator/templates/component_edit.html:11
+#: creator/templates/computermodel_editor_page.html:11
+msgid "Description"
+msgstr "Описание"
+
+#: creator/forms.py:16 creator/templates/component_edit.html:23
+msgid "Percentage"
+msgstr "Процентаж"
+
+#: creator/forms.py:20 creator/models.py:168
+#: creator/templates/computermodel_editor_page.html:17
+msgid "Slogan"
+msgstr "Слоган"
+
+#: creator/models.py:16
+msgid "Rate"
+msgstr "Курс"
+
+#: creator/models.py:17
+msgid "Postfix"
+msgstr "Постфикс"
+
+#: creator/models.py:18
+msgid "Default"
+msgstr "По умолчанию"
+
+#: creator/models.py:29
+msgid "Currencies"
+msgstr "Валюты"
+
+#: creator/models.py:37 creator/models.py:107 creator/models.py:119
+#: creator/models.py:133
+msgid "Feature"
+msgstr "Свойство"
+
+#: creator/models.py:38
+msgid "Features"
+msgstr "Свойства"
+
+#: creator/models.py:44
+msgid "Explanation"
+msgstr "Объяснение"
+
+#: creator/models.py:45 creator/models.py:59 creator/models.py:80
+#: creator/models.py:147
+msgid "Order"
+msgstr "Порядок"
+
+#: creator/models.py:52 creator/models.py:62
+msgid "Subsystem"
+msgstr "Подсистема"
+
+#: creator/models.py:53
+msgid "Subsystems"
+msgstr "Подсистемы"
+
+#: creator/models.py:60
+msgid "Equality"
+msgstr "Эквивалентность"
+
+#: creator/models.py:70 creator/models.py:79
+msgid "Component group"
+msgstr "Группа компонента"
+
+#: creator/models.py:71
+msgid "Component groups"
+msgstr "Группы компонента"
+
+#: creator/models.py:77
+msgid "Is percentage"
+msgstr "Процентаж"
+
+#: creator/models.py:84
+msgid "Provides"
+msgstr "Обеспечивает"
+
+#: creator/models.py:88
+msgid "Requires"
+msgstr "Требует"
+
+#: creator/models.py:92 creator/models.py:142
+msgid "Expandings"
+msgstr "Расширители"
+
+#: creator/models.py:102 creator/models.py:106 creator/models.py:118
+#: creator/models.py:132
+msgid "Component"
+msgstr "Компонент"
+
+#: creator/models.py:103 creator/models.py:163
+#: creator/templates/components_editor.html:27
+msgid "Components"
+msgstr "Компоненты"
+
+#: creator/models.py:108 creator/models.py:120 creator/models.py:135
+msgid "Quantity"
+msgstr "Количество"
+
+#: creator/models.py:114
+msgid "Providing"
+msgstr "Обеспечение"
+
+#: creator/models.py:121
+msgid "Parity"
+msgstr "Четность"
+
+#: creator/models.py:128
+msgid "Requiring"
+msgstr "Требование"
+
+#: creator/models.py:129
+msgid "Requirings"
+msgstr "Требования"
+
+#: creator/models.py:134
+msgid "Needed"
+msgstr "Нужно"
+
+#: creator/models.py:141
+msgid "Expanding"
+msgstr "Расширитель"
+
+#: creator/models.py:146
+msgid "Key name"
+msgstr "Имя ключа"
+
+#: creator/models.py:148
+msgid "Is summary"
+msgstr "В сводке"
+
+#: creator/models.py:155 creator/models.py:201
+msgid "Specification key"
+msgstr "Ключ спецификации"
+
+#: creator/models.py:156
+msgid "Specification keys"
+msgstr "Ключи спецификации"
+
+#: creator/models.py:166
+msgid "Alias"
+msgstr "Алиас"
+
+#: creator/models.py:170
+msgid "Support"
+msgstr "Поддержка"
+
+#: creator/models.py:196 creator/models.py:200
+#: creator/templates/components_editor.html:29
+msgid "Computer model"
+msgstr "Модель компьютера"
+
+#: creator/models.py:197
+msgid "Computer models"
+msgstr "Модели компьютеров"
+
+#: creator/models.py:202
+msgid "Value"
+msgstr "Значение"
+
+#: creator/models.py:208
+msgid "Specification"
+msgstr "Спецификация"
+
+#: creator/models.py:213
+msgid "Source"
+msgstr "Источник"
+
+#: creator/models.py:216
+msgid "Target"
+msgstr "Цель"
+
+#: creator/models.py:221
+msgid "Substitution"
+msgstr "Взаимозаменяемость"
+
+#: creator/models.py:222
+msgid "Substitutions"
+msgstr "Взаимозаменяемости"
+
+#: creator/views.py:296
+msgid "Computer model updated"
+msgstr "Модель компьютера обновлена"
+
+#: creator/templates/component_edit.html:29
+#: creator/templates/components_editor_page.html:52
+#: creator/templates/computermodel_editor_page.html:23
+#: creator/templates/specification_editor_page.html:16
+msgid "Apply"
+msgstr "Применить"
+
+#: creator/templates/component_edit.html:32
+msgid "Cancel"
+msgstr "Отмена"
+
+#: creator/templates/components_editor.html:4
+msgid "editing"
+msgstr "редактирование"
+
+#: creator/templates/components_editor_page.html:5
+msgid "Included"
+msgstr "Включённые"
+
+#: creator/templates/components_editor_page.html:6
+msgid "Available"
+msgstr "Доступные"
+
+#: giver/forms.py:13 giver/templates/computermodel_request_form.html:35
+msgid "Request text"
+msgstr "Текст запроса"
+
+#: giver/views.py:208
+msgid "Request from"
+msgstr "Запрос от"
+
+#: giver/templates/computermodel_request.html:5
+#: giver/templates/computermodel_request_successful.html:4
+msgid "Request for"
+msgstr "Запрос на"
+
+#: giver/templates/configurator.html:11
+msgid "Edit components"
+msgstr "Редактировать компоненты"
+
+#: giver/templates/configurator.html:105
+msgid "Add to cart"
+msgstr "Добавить в корзину"
+
+#: giver/templates/initial.html:4
+msgid "Configurator"
+msgstr "Конфигуратор"
+
+#: giver/templates/initial.html:9
+msgid "Ready"
+msgstr "Готов"

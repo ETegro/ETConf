@@ -1,0 +1,38 @@
+.configurator-price-single {
+	font-size: 100%; /* Dummy */
+}
+
+.configurator-price-total {
+	font-weight: bold;
+}
+
+.configurator-currency {
+	font-size: 100%; /* Dummy */
+}
+
+.configurator-component-description {
+	font-size: 100%; /* Dummy */
+}
+
+.configurator-component-hidden {
+	color: #aaaaaa;
+}
+
+.components-selection {
+	width: 400px;
+	height: 8em;
+	overflow-y: scroll;
+}
+
+.centered {
+	text-align: center;
+}
+
+.darkened {
+	background-color: #eeeeee;
+}
+
+table {
+	border-collapse: separate;
+	border-color: #000000;
+}

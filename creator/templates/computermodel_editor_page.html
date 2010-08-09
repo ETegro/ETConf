@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<div class="centered">
+
+{% if message %}
+	<p>{{ message }}</p>
+{% endif %}
+
+<div class="form_field_wrapper">
+	{{ form.description.errors }}
+	<label for="id_description">{% trans "Description" %}</label><br/>
+	{{ form.description }}
+</div>
+
+<div class="form_field_wrapper">
+	{{ form.slogan.errors }}
+	<label for="id_slogan">{% trans "Slogan" %}</label><br/>
+	{{ form.slogan }}
+</div>
+
+<p>
+	<input type="button"
+	       value="{% trans "Apply" %}"
+	       onclick="computermodel_submit()" />
+</p>
+
+</div>

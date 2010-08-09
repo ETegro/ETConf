@@ -1,0 +1,155 @@
+- fields:
+    components: [1,2,3,4,5,6,7,8,9,10,11]
+    description: Foobar
+    alias: rs160
+    name: RS160
+  model: creator.computermodel
+  pk: 1
+
+# Component groups
+- fields: {description: Central Processing Unit, name: CPU, order: 2, equality: true, subsystem: 1}
+  model: creator.componentgroup
+  pk: 1
+- fields: {description: Memory, name: RAM, order: 3, equality: false, subsystem: 1}
+  model: creator.componentgroup
+  pk: 2
+- fields: {description: Disk drive, name: HDD, order: 4, equality: false, subsystem: 1}
+  model: creator.componentgroup
+  pk: 3
+- fields: {description: Motherboard, name: PLATFORM, order: 1, equality: true, subsystem: 1}
+  model: creator.componentgroup
+  pk: 4
+- fields: {description: Disk controller, name: CTRL, order: 5, equality: false, subsystem: 1}
+  model: creator.componentgroup
+  pk: 5
+
+# Features
+- fields: {description: Interface for SAS, name: SAS}
+  model: creator.feature
+  pk: 1
+- fields: {description: Interface for SATA, name: SATA}
+  model: creator.feature
+  pk: 2
+- fields: {description: Enclosure25, name: Enclosure25}
+  model: creator.feature
+  pk: 3
+- fields: {description: Enclosure35, name: Enclosure35}
+  model: creator.feature
+  pk: 4
+- fields: {description: DDR slot, name: MemorySlot}
+  model: creator.feature
+  pk: 5
+- fields: {description: PCI slot, name: PCISlot}
+  model: creator.feature
+  pk: 6
+- fields: {description: CPU slot, name: CPUSlot}
+  model: creator.feature
+  pk: 7
+
+# Components
+# CPUs
+- fields: {component_group: 1, description: AMD, name: Opteron, price: 45.0, order: 2}
+  model: creator.component
+  pk: 1
+- fields: {component_group: 1, description: Intel, name: Core2, price: 25.0, order: 1}
+  model: creator.component
+  pk: 2
+# Memory
+- fields: {component_group: 2, description: Hynix, name: Two GB, price: 15.0, order: 2}
+  model: creator.component
+  pk: 3
+- fields: {component_group: 2, description: Samsung, name: Four GB, price: 20.0, order: 1}
+  model: creator.component
+  pk: 4
+# HDD-related
+- fields: {component_group: 3, description: Seagate, name: GB250S, price: 40.0, order: 2}
+  model: creator.component
+  pk: 5
+- fields: {component_group: 3, description: Seagate, name: GB250B, price: 40.0, order: 1}
+  model: creator.component
+  pk: 6
+- fields: {component_group: 3, description: Western Digital, name: WD350S, price: 40.0, order: 5}
+  model: creator.component
+  pk: 7
+- fields: {component_group: 3, description: Western Digital, name: WD350B, price: 40.0, order: 4}
+  model: creator.component
+  pk: 8
+- fields: {component_group: 3, description: China noname, name: Kit2535, price: 10.0, order: 3}
+  model: creator.component
+  pk: 9
+- fields: {component_group: 5, description: Adaptec, name: MegaRAID, price: 50.0, order: 1}
+  model: creator.component
+  pk: 10
+- fields: {component_group: 4, description: China noname, name: RSbase, price: 100.0, order: 1}
+  model: creator.component
+  pk: 11
+
+# Relations
+# Adaptec gives 8 SAS ports instead of PCI slot
+- fields: {component: 10, feature: 1, quantity: 8}
+  model: creator.providing
+  pk: 1
+- fields: {component: 10, feature: 6, quantity: 1, parity: 1}
+  model: creator.requiring
+  pk: 1
+# Kit2535 gives 3 2.5" instead of 2 3.5"
+- fields: {component: 9, feature: 3, quantity: 3}
+  model: creator.providing
+  pk: 2
+- fields: {component: 9, feature: 4, quantity: 2, parity: 1}
+  model: creator.requiring
+  pk: 2
+# CPUs
+- fields: {component: 1, feature: 7, quantity: 1, parity: 1}
+  model: creator.requiring
+  pk: 3
+- fields: {component: 2, feature: 7, quantity: 1, parity: 1}
+  model: creator.requiring
+  pk: 4
+# Memory
+- fields: {component: 3, feature: 5, quantity: 1, parity: 1}
+  model: creator.requiring
+  pk: 5
+- fields: {component: 4, feature: 5, quantity: 1, parity: 2}
+  model: creator.requiring
+  pk: 6
+# HDDs
+- fields: {component: 5, feature: 3, quantity: 1, parity: 1}
+  model: creator.requiring
+  pk: 7
+- fields: {component: 6, feature: 4, quantity: 1, parity: 1}
+  model: creator.requiring
+  pk: 8
+- fields: {component: 7, feature: 3, quantity: 1, parity: 1}
+  model: creator.requiring
+  pk: 9
+- fields: {component: 8, feature: 4, quantity: 1, parity: 1}
+  model: creator.requiring
+  pk: 10
+# RSbase
+- fields: {component: 11, feature: 2, quantity: 8}
+  model: creator.providing
+  pk: 3
+- fields: {component: 11, feature: 4, quantity: 2}
+  model: creator.providing
+  pk: 4
+- fields: {component: 11, feature: 7, quantity: 2}
+  model: creator.providing
+  pk: 5
+- fields: {component: 11, feature: 5, quantity: 4}
+  model: creator.providing
+  pk: 6
+- fields: {component: 11, feature: 6, quantity: 2}
+  model: creator.providing
+  pk: 7
+
+# Dummy currency
+- fields: {is_default: true, name: dummy, postfix: DUM, rate: 1.0}
+  model: creator.currency
+  pk: 1
+
+# Dummy subsystem
+- fields: {description: "dummy", name: DUMMY, order: 1}
+  model: creator.componentgroupsubsystem
+  pk: 1
+

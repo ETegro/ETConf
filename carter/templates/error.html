@@ -1,0 +1,10 @@
+{% extends "xhtml.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Error" %} {% block error-head %}{% endblock %}{% endblock %}
+
+{% block body %}
+<body><p>
+	{% trans "Error" %} {% block error-body %}{% endblock %}
+</p></body>
+{% endblock %}

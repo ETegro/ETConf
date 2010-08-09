@@ -1,0 +1,22 @@
+{% extends "etegros.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Successfully created order request" %}{% endblock %}
+
+{% block main %}
+
+{% for conversion in conversions %}
+	{{ conversion }}
+{% endfor %}
+
+<p>
+{% ifequal settings.LANGUAGE_CODE "ru" %}
+Вашему заказу присвоен номер <b>{{ order_request_id }}</b>. В ближайшее
+время на Ваш почтовый ящик должно прийти подтверждающее сообщение
+о приёме заказа, а в течение рабочего дня с Вами свяжется наш менеджер.
+{% else %}
+Your order request number is <b>{{ order_request_id }}</b>.
+{% endifequal %}
+</p>
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% load i18n %}
+
+<table border="1" width="800px">
+	<tr>
+		<th class="centered">{% trans "Included" %}</th>
+		<th class="centered">{% trans "Available" %}</th>
+	</tr>
+
+{% for group in groups %}
+
+<tr>
+	<th colspan="2">
+		{% if group.group.description %}
+			{{ group.group.description }}
+		{% else %}
+			{{ group.group.name }}
+		{% endif %}
+	</th>
+</tr>
+<tr>
+	<td>
+		<ul id="{{ group.group.name }}_included" class="components-selection">
+		{% for c in group.included %}
+			<li id="component_{{ c.id }}">
+				<a href="#" onclick='component_edit( "{{ group.group.name }}", {{ c.id }} ); return false'>{{ c }}</a>
+			</li>
+		{% endfor %}
+		</ul>
+	</td>
+	<td>
+		<ul id="{{ group.group.name }}_available" class="components-selection">
+		{% for c in group.available %}
+			<li id="component_{{ c.id }}">
+				<a href="#" onclick='component_edit( "{{ group.group.name }}", {{ c.id }} ); return false'>{{ c }}</a>
+			</li>
+		{% endfor %}
+		</ul>
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="darkened">
+		<div id="{{ group.group.name }}_component_editor" />
+	</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<p class="centered">
+<input type="button"
+       value="{% trans "Apply" %}"
+       onclick='submit_components()' />
+</p>

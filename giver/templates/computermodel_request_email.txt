@@ -1,0 +1,12 @@
+{% autoescape off %}{% ifequal settings.LANGUAGE_CODE "ru" %}
+Запрос на: {{ computermodel.name }}
+
+Компания: {{ data.company }}
+Имя: {{ data.name }}
+Адрес: {{ data.address }}
+E-mail: {{ data.email }}
+Телефон: {{ data.telephone }}
+
+Текст запроса:
+{{ data.request }}
+{% endifequal %}{% endautoescape %}

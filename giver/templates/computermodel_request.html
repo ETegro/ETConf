@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<div id="computermodel_request_form">
+
+<h1>{% trans "Request for" %} {{ computermodel.name }}</h1>
+<p>
+	{% ifequal settings.LANGUAGE_CODE "ru" %}
+	Мы ответим на все интересующие Вас вопросы, связанные с ETegro {{ computermodel.name }}.
+	<br/>
+	Также вы можете связаться с нами по телефону: (495) 380-02-88 
+	{% endifequal %}
+</p>
+
+{% include "computermodel_request_form.html" %}
+
+</div>

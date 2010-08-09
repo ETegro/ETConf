@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<table width="100%" border="1">
+{% for specification_key in specification_keys %}
+<tr>
+	<th>{{ specification_key }}</th>
+	<td><textarea id="{{ specification_key.id }}_svalue" cols="80" rows="2">{% for specification in specifications %}{% ifequal specification.skey specification_key %}{{ specification.svalue }}{% endifequal %}{% endfor %}</textarea></td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+<p class="centered">
+	<input type="button"
+	       value="{% trans "Apply" %}"
+	       onclick="specifications_submit()" />
+</p>

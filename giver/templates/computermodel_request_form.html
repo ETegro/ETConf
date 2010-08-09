@@ -1,0 +1,42 @@
+{% load i18n %}
+
+<p>
+	{{ form.company.errors }}
+	<label for="id_company">{% trans "Company" %}</label><br/>
+	{{ form.company }}
+</p>
+
+<p>
+	{{ form.name.errors }}
+	<label for="id_name">{% trans "Your name" %}</label><br/>
+	{{ form.name }}
+</p>
+
+<p>
+	{{ form.address.errors }}
+	<label for="id_address">{% trans "Delivery address" %}</label><br/>
+	<textarea name="address" id="id_address" cols="40" rows="5"></textarea>
+</p>
+
+<p>
+	{{ form.email.errors }}
+	<label for="id_email">{% trans "Your email" %}</label><br/>
+	{{ form.email }}
+</p>
+
+<p>
+	{{ form.telephone.errors }}
+	<label for="id_telephone">{% trans "Contact telephone" %}</label><br/>
+	{{ form.telephone }}
+</p>
+
+<p>
+	{{ form.request.errors }}
+	<label for="id_request">{% trans "Request text" %}</label><br/>
+	<textarea name="request" id="id_request" cols="40" rows="10"></textarea>
+</p>
+
+<input type="button"
+       value="{% trans "Send" %}"
+       id="computermodel_request_button"
+       onclick="computermodel_request_send('{% url configurator.giver.views.computermodel_request computermodel.alias %}')" />

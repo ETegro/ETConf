@@ -1,0 +1,47 @@
+{% autoescape off %}{% with order_request as oreq %}{% ifequal settings.LANGUAGE_CODE "ru" %}
+                        Сформированный Вами заказ
+                        =========================
+Номер заказа: {{ oreq.id }}
+Компания: {{ oreq.company }}
+Имя: {{ oreq.name }}
+Адрес: {{ oreq.address }}
+E-mail: {{ oreq.email }}
+Телефон: {{ oreq.telephone }}
+Примечание: {{ oreq.comment }}
+{% for order in orders %}
+------------------------------------------------------------------------
+{{ order.computer_model.name }}  --  {{ order.price }} {{ order.currency }}
+------------------------------------------------------------------------
+{% for group in order.groups %}
+* {{ group.0.subsystem.description }}:
+  {% for component in group.1 %}{{ component.quantity }} x {{ component.component.name }}
+  {% endfor %}{% endfor %}
+{% endfor %}
+
+========================================================================
+Общая сумма: {{ oreq.price }} {{ oreq.currency }}
+Состояние заказа можно уточнить в отделе продаж:
+телефон - +7-(495)-380-0288; e-mail - sales@etegro.com.
+{% else %}
+                               Your order
+                               ==========
+Order number: {{ oreq.id }}
+Company: {{ oreq.company }}
+Name: {{ oreq.name }}
+Address: {{ oreq.address }}
+E-mail: {{ oreq.email }}
+Telephone: {{ oreq.telephone }}
+Comment: {{ oreq.comment }}
+{% for order in orders %}
+------------------------------------------------------------------------
+{{ order.computer_model.name }}  --  {{ order.price }} {{ order.currency }}
+------------------------------------------------------------------------
+{% for group in order.groups %}
+* {{ group.0.subsystem.description }}:
+  {% for component in group.1 %}{{ component.quantity }} x {{ component.component.name }}
+  {% endfor %}{% endfor %}
+{% endfor %}
+
+========================================================================
+Total price: {{ oreq.price }} {{ oreq.currency }}
+{% endifequal %}{% endwith %}{% endautoescape %}

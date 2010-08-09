@@ -1,0 +1,63 @@
+<!--
+ ETConf - web-based user-friendly computer hardware configurator
+ Copyright (C) 2010 ETegro Technologies, PLC <http://www.etegro.com/>
+                    Sergey Matveev <sergey.matveev@etegro.com>
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+ 
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE yml_catalog SYSTEM "shops.dtd">
+{% spaceless %}
+<yml_catalog date="{{ date }}">
+<shop>
+	<name>ETegro Technologies</name>
+	<company>ETegro Technologies</company>
+	<url>http://www.etegro.com/</url>
+	
+	<currencies>
+		<currency id="RUR" rate="1" plus="0"/>
+	</currencies>
+	
+	<categories>
+		<category id="1">Компьютеры</category>
+		<category id="10" parentId="1">Серверы</category>
+	</categories>
+	
+	<offers>
+		{% for offer in offers %}
+		<offer id="{{ offer.id }}" type="vendor.model" available="true">
+			<url>{{ offer.url }}</url>
+			<price>{{ offer.price }}</price>
+			<currencyId>RUR</currencyId>
+			<categoryId>10</categoryId>
+			<picture>{{ offer.picture }}</picture>
+			<delivery>false</delivery>
+			<typePrefix>Сервер</typePrefix>
+			<vendor>ETegro</vendor>
+			<vendorCode>{{ offer.vendorcode }}</vendorCode>
+			<model>{{ offer.model }}</model>
+			<description>{{ offer.description }}</description>
+			<manufacturer_warranty>true</manufacturer_warranty>
+			<country_of_origin>Россия</country_of_origin>
+
+			{% for param in offer.params %}
+			<param name="{{ param.0 }}">{{ param.1 }}</param>
+			{% endfor %}
+		</offer>
+		{% endfor %}
+	</offers>
+</shop>
+</yml_catalog>
+{% endspaceless %}
