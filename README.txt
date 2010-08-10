@@ -152,6 +152,8 @@ configurations. You can load it into database by "make example".
 Next, put Prototype.js and Script.Aculo.Us JavaScript libraries into
 shared static files directory.
 
+And, also you can edit setting.py for seldom varied options.
+
                          Running under Lighttpd
                          ----------------------
 To be filled.
@@ -172,6 +174,9 @@ After that, your configurator will be available with URL's prefix
 * Yandex Market's YML generator currently is very ETegro (and Russia
   overall) specific. Please look deeper into *marketer/* subdirectory
   if you need.  It's YML is available by /market.xml URL.
+* Edit computermodel.rst reStructured Text template that is used to
+  generate pretty outlooking PDFs. Also, edit rst2pdf template located
+  in *media/rst2pdf-stylesheet.style*.
 
 [1] http://www.djangoproject.com/
 [2] http://www.etegro.com/

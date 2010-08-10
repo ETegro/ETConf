@@ -44,43 +44,11 @@
       * -
           .. class:: meine
 
-          ETegro Technologies
-
-          .. class:: meine
-
-          Россия, Москва, 111141
-
-          .. class:: meine
-
-          ул. Электродная, 2, #12-13-14
-
-          .. class:: meine
-
-          Тел/Факс: +7-495-380-0288
-
-          .. class:: meine
-
-          `sales@etegro.com <mailto:sales@etegro.com>`_
-
-          .. class:: meine
-
-          `www.etegro.com <http://www.etegro.com/>`_
+          Your Company
 
         -
           .. class:: meine
 
-          ©2005 ETegro Technologies. Все права защищены
-
-          .. class:: meine
-
-          ETegro Technologies и логотип ETegro Technologies являются
-          зарегистрированными торговыми марками ЗАО ЕТегро Текнолоджис.
-          
-          .. class:: meine
-
-          Примечание: упомянутые наименования сторонних продуктов
-          являются торговыми марками их владельцев и приведены
-          исключительно в целях идентификации. Цены и спецификации
-          могут быть изменены без оповещения.
+          ©2005 Your Company
 
 {% endautoescape %}

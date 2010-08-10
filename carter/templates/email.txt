@@ -20,11 +20,9 @@ E-mail: {{ oreq.email }}
 
 ========================================================================
 Общая сумма: {{ oreq.price }} {{ oreq.currency }}
-Состояние заказа можно уточнить в отделе продаж:
-телефон - +7-(495)-380-0288; e-mail - sales@etegro.com.
 {% else %}
-                               Your order
-                               ==========
+                          Your requested order
+                          ====================
 Order number: {{ oreq.id }}
 Company: {{ oreq.company }}
 Name: {{ oreq.name }}

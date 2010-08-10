@@ -20,9 +20,9 @@ IMAGES_PATH = 'to be filled'
 FONTS_PATH = 'to be filled'
 STYLE_PATH = 'to be filled'
 
-ORDER_SUBJECT_FROM = "etegro.com"
-ORDER_FROM = "sales@etegro.com"
-ORDER_CC = "www@etegro.com"
+ORDER_SUBJECT_FROM = "company.com"
+ORDER_FROM = "sales@company.com"
+ORDER_CC = "www@company.com"
 
 ################################################################################
 # Django application related options
@@ -32,7 +32,7 @@ SESSION_COOKIE_NAME = "configurator-sessionid"
 LOGIN_URL = "/configurator/admin"
 
 ADMINS = (
-	('Sergey Matveev', 'sergey.matveev@etegro.com'),
+	('Your admin', 'your.admin@company.com'),
 )
 
 MANAGERS = ADMINS
