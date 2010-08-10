@@ -115,7 +115,7 @@ so-called "subsystems".
                               ============
 * Python interpreter[5] 2.5 version or higher
 * Django framework 1.1.1
-* MySQL, PostgreSQL or SQLite database with correpsonding Python library
+* MySQL or PostgreSQL database with correpsonding Python library
 * Python YAML library
 * Docutils to render reStructured Text
 * GNU Make
@@ -127,7 +127,7 @@ program installed and fonts in some directory.
 
                    Example installation under Debian
                    ---------------------------------
-  % apt-get install python-sqlite python python-docutils python-flup python-memcache python-psycopg2 python-yaml make python-mysql memcached python-setuptools build-essential libfreetype6-dev python-dev python-imaging
+  % apt-get install python python-docutils python-flup python-memcache python-psycopg2 python-yaml make python-mysql memcached python-setuptools build-essential libfreetype6-dev python-dev python-imaging
   % wget -O - http://www.djangoproject.com/download/1.1.1/tarball/ | gunzip -c | tar xvf -
   % pushd Django-1.1.1 && python setup.py install && popd && rm -fr Django-1.1.1
   % wget -O - http://rst2pdf.googlecode.com/files/rst2pdf-0.15.tar.gz | gunzip -c | tar xvf -
@@ -141,10 +141,9 @@ Because ETConf is written on an interpreted language -- there is no need
 to compile anything in it. Just create database, edit Makefile.config,
 make sync-DATABASE, configure your HTTP server and that is all.
 
-If you want to use SQLite as database backend, then you should run "make
-sync-sqlite". If you want to use either MySQL or PostgreSQL, then run
-"make sync-mysql" or "make sync-postgresql". This will create all
-necessary tables in database.
+For the first start, you should "make sync" that will create database
+with necessary tables. Also it will ask you for password for
+administrator named "admin".
 
 There is an example ETegro Technologies database of various server's
 configurations. You can load it into database by "make example".

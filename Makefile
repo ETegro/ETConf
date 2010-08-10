@@ -21,54 +21,39 @@ sync-fonts:
 sync-stylesheet:
 	sed -i "s/^STYLE_PATH = .*$$/STYLE_PATH = '$(shell echo $(STYLE_PATH) | sed 's/\//\\\//g')'/" settings.py
 
-sqlite-clean:
-	rm -f $(SQLITE_DB_PATH)
-
+ifeq ($(DB_TYPE), mysql)
 mysql-clean:
-	echo "show tables" | mysql -u$(MYSQL_USER) $(MYSQL_NAME) | perl -ne 'chop; print "drop table $$_;\n" if /^(django|creator|carter|auth)/' | mysql -u$(MYSQL_USER) $(MYSQL_NAME)
+	echo "show tables" | mysql -u$(DB_USER) $(DB_NAME) | perl -ne 'chop; print "drop table $$_;\n" if /^(django|creator|carter|auth)/' | mysql -u$(DB_USER) $(DB_NAME)
 
-sync-base-sqlite: sqlite-clean
-	echo "WARNING: This target is only for SQlite-based database"
-	sed -i "s/^DATABASE_ENGINE = .*$$/DATABASE_ENGINE = 'sqlite3'/" settings.py
-	sed -i "s/^DATABASE_NAME = .*$$/DATABASE_NAME = '$(shell echo $(SQLITE_DB_PATH) | sed 's/\//\\\//g')'/" settings.py
-	touch $(SQLITE_DB_PATH)
-	chmod 666 $(SQLITE_DB_PATH)
-
-sync-base-mysql: mysql-clean
-	echo "WARNING: This target is only for MySQL-based database"
+sync-base: mysql-clean
 	sed -i "s/^DATABASE_ENGINE = .*$$/DATABASE_ENGINE = 'mysql'/" settings.py
-	sed -i "s/^DATABASE_NAME = .*$$/DATABASE_NAME = '$(MYSQL_NAME)'/" settings.py
-	sed -i "s/^DATABASE_USER = .*$$/DATABASE_USER = '$(MYSQL_USER)'/" settings.py
-	sed -i "s/^DATABASE_PASSWORD = .*$$/DATABASE_PASSWORD = '$(MYSQL_PASSWORD)'/" settings.py
-	sed -i "s/^DATABASE_HOST = .*$$/DATABASE_HOST = '$(MYSQL_HOST)'/" settings.py
-	sed -i "s/^DATABASE_PORT = .*$$/DATABASE_PORT = '$(MYSQL_PORT)'/" settings.py
-
+	sed -i "s/^DATABASE_NAME = .*$$/DATABASE_NAME = '$(DB_NAME)'/" settings.py
+	sed -i "s/^DATABASE_USER = .*$$/DATABASE_USER = '$(DB_USER)'/" settings.py
+	sed -i "s/^DATABASE_PASSWORD = .*$$/DATABASE_PASSWORD = '$(DB_PASSWORD)'/" settings.py
+	sed -i "s/^DATABASE_HOST = .*$$/DATABASE_HOST = '$(DB_HOST)'/" settings.py
+	sed -i "s/^DATABASE_PORT = .*$$/DATABASE_PORT = '$(DB_PORT)'/" settings.py
+else
 postgresql-clean:
-	echo "DROP DATABASE $(MYSQL_NAME); CREATE DATABASE $(MYSQL_NAME)" | psql -U $(MYSQL_USER)
+	echo "DROP DATABASE $(DB_NAME); CREATE DATABASE $(DB_NAME)" | psql -U $(DB_USER)
 
-sync-base-postgresql: postgresql-clean
-	echo "WARNING: This target is only for PostgreSQL-based database"
+sync-base: postgresql-clean
 	sed -i "s/^DATABASE_ENGINE = .*$$/DATABASE_ENGINE = 'postgresql_psycopg2'/" settings.py
-	sed -i "s/^DATABASE_NAME = .*$$/DATABASE_NAME = '$(MYSQL_NAME)'/" settings.py
-	sed -i "s/^DATABASE_USER = .*$$/DATABASE_USER = '$(MYSQL_USER)'/" settings.py
-	sed -i "s/^DATABASE_PASSWORD = .*$$/DATABASE_PASSWORD = '$(MYSQL_PASSWORD)'/" settings.py
-	sed -i "s/^DATABASE_HOST = .*$$/DATABASE_HOST = '$(MYSQL_HOST)'/" settings.py
-	sed -i "s/^DATABASE_PORT = .*$$/DATABASE_PORT = '$(MYSQL_PORT)'/" settings.py
+	sed -i "s/^DATABASE_NAME = .*$$/DATABASE_NAME = '$(DB_NAME)'/" settings.py
+	sed -i "s/^DATABASE_USER = .*$$/DATABASE_USER = '$(DB_USER)'/" settings.py
+	sed -i "s/^DATABASE_PASSWORD = .*$$/DATABASE_PASSWORD = '$(DB_PASSWORD)'/" settings.py
+	sed -i "s/^DATABASE_HOST = .*$$/DATABASE_HOST = '$(DB_HOST)'/" settings.py
+	sed -i "s/^DATABASE_PORT = .*$$/DATABASE_PORT = '$(DB_PORT)'/" settings.py
+endif
 
 syncdb:
 	$(CMD_MANAGE) syncdb --noinput
 
 sync-admin:
-	$(CMD_MANAGE) createsuperuser --username=etegro --email=etegro@etegro.com
+	$(CMD_MANAGE) createsuperuser --username=admin --email=admin@company.com
 
-sync-sqlite: sync-debug sync-images sync-fonts sync-stylesheet sync-cache-backend sync-base-sqlite syncdb sync-admin
-sync-mysql: sync-debug sync-images sync-fonts sync-stylesheet sync-cache-backend sync-base-mysql syncdb sync-admin
-sync-postgresql: sync-debug sync-images sync-fonts sync-stylesheet sync-cache-backend sync-base-postgresql syncdb sync-admin
+sync: sync-debug sync-images sync-fonts sync-stylesheet sync-cache-backend sync-base syncdb sync-admin
 
 shell:
-	echo "from configurator.creator.models import *"
-	echo "from configurator.giver.views import *"
-	echo "from configurator.carter.models import *"
 	$(CMD_MANAGE) shell
 
 example:
