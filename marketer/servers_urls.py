@@ -1,3 +1,7 @@
+# This file tells application how to find direct URL to computer's
+# description by it's alias. We do not know other ways to do this, as
+# paths can be very different.
+
 URLS = {
 	"rs110g3": "servers/rack/base/rs110g3",
 	"rs120g2": "servers/rack/base/rs120g2",

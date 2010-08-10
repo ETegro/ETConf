@@ -167,6 +167,12 @@ following example string into your configuration file:
 After that, your configurator will be available with URL's prefix
 "/configurator".
 
+                                 Notes
+                                 =====
+* Yandex Market's YML generator currently is very ETegro (and Russia
+  overall) specific. Please look deeper into *marketer/* subdirectory
+  if you need.  It's YML is available by /market.xml URL.
+
 [1] http://www.djangoproject.com/
 [2] http://www.etegro.com/
 [3] http://market.yandex.ru/

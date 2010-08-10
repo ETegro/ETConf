@@ -30,7 +30,10 @@ def __yandex_date( date ):
 	return "%d-%02d-%02d %02d:%02d" % ( d[0], d[1], d[2], d[3], d[4] )
 
 def __picture_url( alias ):
-	return "http://www.etegro.com/img/%s/%s/0.jpg" % ( alias[0:2], alias[2:] )
+	# ETegro's specific: it's computer models aliases consists of
+	# two \w characters (meaning "rack-mounted", "tower", "storage"
+	# and so on) and everything else as subdirectory path
+	return "http://www.company.com/img/%s/%s/0.jpg" % ( alias[0:2], alias[2:] )
 
 def perform( request ):
 	response = cache.get( "yml_response" )
@@ -38,7 +41,7 @@ def perform( request ):
 	offers = []
 	for alias, url in configurator.marketer.servers_urls.URLS.iteritems():
 		cm = ComputerModel.objects.get( alias = alias )
-		offers.append( { "url": "http://www.etegro.com/products/%s" % url,
+		offers.append( { "url": "http://www.company.com/%s" % url,
 				 "id": cm.id,
 				 "price": int( cm.get_default_price() ),
 				 "description": cm.slogan,
