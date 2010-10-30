@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ETConf -- web-based user-friendly computer hardware configurator
-# Copyright (C) 2010 ETegro Technologies, PLC <http://www.etegro.com/>
-#                    Sergey Matveev <sergey.matveev@etegro.com>
+# Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
+#                         Sergey Matveev <sergey.matveev@etegro.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -24,6 +24,8 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 
 from configurator.giver.forms import *
+from configurator.partners.models import PartnerProfile
+from django.contrib.auth.models import User
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -117,7 +119,7 @@ def __validate( components ):
 			pool[ e.feature ] = e.quantity
 	return ( components, pool )
 
-def render( computermodel, component_ids ):
+def render( computermodel, component_ids, user = None ):
 	components = {}
 	computermodel_components = computermodel.components.order_by( "order" ).select_related()
 
@@ -148,6 +150,11 @@ def render( computermodel, component_ids ):
 	components, pool = __validate( components_flattened )
 	price_without_percentage = sum([ c.price for c in components if not c.is_percentage ])
 
+	if user:
+		calculated_discount = user.discount( computermodel )
+	else:
+		calculated_discount = None
+
 	# Generating output itself
 	price = 0.0
 	groups = []
@@ -169,6 +176,10 @@ def render( computermodel, component_ids ):
 				entity["quantity"] = components.count( c )
 				entity["price_total"] = entity["price_single"] * entity["quantity"]
 				price = price + entity["price_total"]
+			if calculated_discount:
+				entity["price_single"] = entity["price_single"] * calculated_discount[0]
+				if entity.has_key( "price_total" ):
+					entity["price_total"] = entity["price_total"] * calculated_discount[0]
 			if entity["selections"][0] == 0:
 				entity["hidden"] = True
 			group["components"].append( entity )
@@ -189,16 +200,37 @@ def render( computermodel, component_ids ):
 		ids[ component.id ] = ids[ component.id ] + 1
 	component_ids = ",".join( [ "%d-%d" % ( id, q ) for id, q in ids.iteritems() ] )
 
+	if user:
+		discount = { "profile": user,
+			     "value": int( calculated_discount[0] * 100 ),
+			     "price": int( price * (1.0 - calculated_discount[0]) ),
+			     "formula": calculated_discount[2] }
+	else:
+		discount = None
+
 	return { "groups": groups,
 		 "price": int( price ),
+		 "discount": discount,
 		 "computermodel": computermodel,
 		 "ids": component_ids,
 		 "subsystems": subsystems,
 		 "currency": CurrentCurrency.postfix }
 	
 def components( request, computermodel ):
-	try: return request.GET["components"]
-	except: return computermodel.get_default_configuration()
+	if request.GET.has_key( "components" ) and request.GET["components"]:
+		return request.GET["components"]
+	else:
+		return computermodel.get_default_configuration()
+
+def __partner_user( request ):
+	user = request.user
+	if not user.is_anonymous() and not user.is_superuser:
+		try:
+			return user.get_profile()
+		except User.DoesNotExist:
+			return None
+	else:
+		return None
 
 #@profile( "perform.prof" )
 def perform( request, computermodel_alias ):
@@ -210,14 +242,18 @@ def perform( request, computermodel_alias ):
 					   "settings": settings },
 					   context_instance=RequestContext(request) )
 	return render_to_response( "configurator.html",
-				 { "configurator": render( computermodel, components( request, computermodel ) ),
+				 { "configurator": render( computermodel, components( request,
+				 						      computermodel ),
+										      user = __partner_user( request ) ),
 				   "cache_timeout": settings.CACHE_TIMEOUT },
 				   context_instance=RequestContext(request) )
 
 def configurator( request, computermodel_alias ):
 	computermodel = get_object_or_404( ComputerModel, alias = computermodel_alias )
 	return render_to_response( "initial.html",
-				 { "configurator": render( computermodel, components( request, computermodel ) ),
+				 { "configurator": render( computermodel, components( request,
+				 						      computermodel ),
+										      user = __partner_user( request ) ),
 				   "cache_timeout": settings.CACHE_TIMEOUT,
 				   "settings": settings },
 				   context_instance=RequestContext(request) )

@@ -1,6 +1,6 @@
 # ETConf -- web-based user-friendly computer hardware configurator
-# Copyright (C) 2010 ETegro Technologies, PLC <http://www.etegro.com/>
-#                    Sergey Matveev <sergey.matveev@etegro.com>
+# Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
+#                         Sergey Matveev <sergey.matveev@etegro.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     ( r'^creator/', include( "configurator.creator.urls" ) ),
     ( r'^giver/', include( "configurator.giver.urls" ) ),
     ( r'^carter/', include( "configurator.carter.urls" ) ),
+    ( r'^sessioner/', include( "configurator.sessioner.urls" ) ),
     ( r'^market.xml', include( "configurator.marketer.urls" ) ),
     ( r'^jsi18n/$', "django.views.i18n.javascript_catalog", js_info_dict ),
     ( r'^i18n/', include( "django.conf.urls.i18n" ) ),

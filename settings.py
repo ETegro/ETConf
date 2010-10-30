@@ -20,31 +20,34 @@ IMAGES_PATH = 'to be filled'
 FONTS_PATH = 'to be filled'
 STYLE_PATH = 'to be filled'
 
-ORDER_SUBJECT_FROM = "company.com"
-ORDER_FROM = "sales@company.com"
-ORDER_CC = "www@company.com"
+ORDER_SUBJECT_FROM = "etegro.com"
+ORDER_FROM = "sales@etegro.com"
+ORDER_CC = "www@etegro.com"
 
 ################################################################################
 # Django application related options
 ################################################################################
 DEFAULT_CONTENT_TYPE = "text/html" # Should be "application/xhtml+xml"
 SESSION_COOKIE_NAME = "configurator-sessionid"
-LOGIN_URL = "/configurator/admin"
+LOGIN_URL = "/wizard/admin"
 
 ADMINS = (
-	('Your admin', 'your.admin@company.com'),
+	('Sergey Matveev', 'sergey.matveev@etegro.com'),
 )
 
+AUTH_PROFILE_MODULE = "partners.PartnerProfile"
 MANAGERS = ADMINS
 
 TIME_ZONE = 'Europe/Moscow'
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'ru'
 SITE_ID = 1
 USE_I18N = True
 MEDIA_ROOT = ''
 MEDIA_URL = '/static/configurator/'
 ADMIN_MEDIA_PREFIX = '/static/configurator/admin/'
-SECRET_KEY = '5f(1=0i$)#s_=^xsk&hii#mb37#2iqiz0is+y5-kzl&6^0=t!@'
+SECRET_KEY = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+#SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_PATH = "/wizard"
 
 TEMPLATE_LOADERS = (
 	'django.template.loaders.filesystem.load_template_source',
@@ -77,5 +80,7 @@ INSTALLED_APPS = (
 	'configurator.giver',
 	'configurator.carter',
 	'configurator.marketer',
+	'configurator.partners',
+	'configurator.sessioner',
 	'configurator',
 )

@@ -15,16 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from django import forms
+from django.conf.urls.defaults import *
 
-from configurator.creator.models import *
-
-from django.utils.translation import ugettext as _
-
-class ComputerModelRequestForm( forms.Form ):
-	company = forms.CharField( label = _("Company"), required = False )
-	name = forms.CharField( label = _("Your name") )
-	address = forms.CharField( label = _("Delivery address"), widget = forms.Textarea, required = False )
-	email = forms.EmailField( label = _("Your email") )
-	telephone = forms.CharField( label = _("Contact telephone"), required = False )
-	request = forms.CharField( label = _("Request text"), widget = forms.Textarea )
+urlpatterns = patterns( "configurator.sessioner.views",
+	( r"^login/$", "perform_login" ),
+	( r"^logout/$", "perform_logout" ),
+)

@@ -1,4 +1,23 @@
-{% extends "main.html" %}
+{% extends "etegros.html" %}
+{% comment %}
+ETConf -- web-based user-friendly computer hardware configurator
+Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
+                        Sergey Matveev <sergey.matveev@etegro.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+
 {% load i18n %}
 
 {% block title %}{% trans "Successfully created order request" %}{% endblock %}
@@ -9,14 +28,10 @@
 	{{ conversion }}
 {% endfor %}
 
-<p>
-{% ifequal settings.LANGUAGE_CODE "ru" %}
-Вашему заказу присвоен номер <b>{{ order_request_id }}</b>. В ближайшее
-время на Ваш почтовый ящик должно прийти подтверждающее сообщение
-о приёме заказа, а в течение рабочего дня с Вами свяжется наш менеджер.
-{% else %}
-Your order request number is <b>{{ order_request_id }}</b>.
-{% endifequal %}
-</p>
+<p>{% blocktrans %}
+Your order request has number <b>{{ order_request_id }}</b>.  Soon you
+will recieve approving message in your mailbox and during the workday
+our manager will contact you.
+{% endblocktrans %}</p>
 
 {% endblock %}

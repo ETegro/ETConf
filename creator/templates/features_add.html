@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Add features" %}{% endblock %}
+
+{% block content %}
+
+<p>{% trans "You want to modify following components" %}:</p>
+<ul>
+	{% for component in components %}
+		<li>{{ component }}</li>
+	{% endfor %}
+</ul>
+
+<form method="post" action="{% url configurator.creator.views.features_add %}" />
+	{{ form.as_p }}
+	<input type="hidden" name="ids" value="{{ ids }}" />
+	<input type="submit" name="submit" value="{% trans "Apply" %}" />
+</form>
+
+{% endblock %}

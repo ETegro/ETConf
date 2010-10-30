@@ -1,0 +1,23 @@
+{% extends "xhtml.html" %}
+{% load i18n %}
+
+{% block header %}
+	<link href="/static/{% if partner %}partners/{{ partner.0 }}.css{% else %}etegro.css{% endif %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block body %}
+<body class="home">
+<div class="body">
+	<div class="main">
+	{% block main %}{% endblock %}
+	</div>
+
+	{% if partner %}
+		{% include "etegros_partner.html" %}
+	{% else %}
+		{% include "etegros_partnerless.html" %}
+	{% endif %}
+</div>
+</body>
+
+{% endblock %}

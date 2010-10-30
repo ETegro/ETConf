@@ -1,6 +1,4 @@
 {% load i18n %}
 
-{% ifequal settings.LANGUAGE_CODE "ru" %}
 <h1>{% trans "Request for" %} {{ computermodel.name }}</h1>
-<p>Спасибо, ваш запрос будет обработан в ближайшее время.</p>
-{% endifequal %}
+<p>{% trans "Thank you, your request will be processed soon" %}</p>

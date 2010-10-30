@@ -1,3 +1,22 @@
+{% comment %}
+ETConf -- web-based user-friendly computer hardware configurator
+Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
+                        Sergey Matveev <sergey.matveev@etegro.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+
 {% load i18n %}
 {% load markup %}
 {% load humanize %}
@@ -5,12 +24,18 @@
 {% spaceless %}
 {% with configurator as c %}
 
-{% if user.is_authenticated %}
+{% if user.is_superuser %}
 <p>
 	<a href="{% url configurator.creator.views.components_editor configurator.computermodel.alias %}">
 		{% trans "Edit components" %}
 	</a>
 </p>
+{% endif %}
+
+{% if c.discount %}
+	<p><u>{{ c.discount.profile.company_name }}</u>
+	   ({% trans "manager" %}: {{ c.discount.profile.personal_manager }})</p>
+	<p>{% trans "Discount" %}: {{ c.discount.value }}% = {{ c.discount.formula }}</p>
 {% endif %}
 
 {% for subsystem in c.subsystems %}
@@ -97,14 +122,25 @@
 {% endfor %}
 
 <div class="total"><h2>{% trans "Total price" %}:</h2>
-    <div>{{ c.price|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span></div>
+	<div>
+		{% if c.discount %}
+			{{ c.discount.price|intcomma }}
+			&#160;<span class="configurator-currency">{{ c.currency }}</span>
+			(
+				{% trans "without discount" %}:&#160;
+				{{ c.price|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span>
+			)
+		{% else %}
+			{{ c.price|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span>
+		{% endif %}
+	</div>
 </div>
 
 <div class="submit">
-    <input type="hidden" id="ids" name="ids" value="{{ c.ids }}" />
-    <input type="button" id="add_to_cart_button" value="{% trans "Add to cart" %}"
-       onclick="cart_add('{% url configurator.carter.views.order_create configurator.computermodel.alias %}')"
-    />
+	<input type="hidden" id="ids" name="ids" value="{{ c.ids }}" />
+	<input type="button" id="add_to_cart_button" value="{% trans "Add to cart" %}"
+	       onclick="cart_add('{% url configurator.carter.views.order_create configurator.computermodel.alias %}')"
+	/>
 </div>
 
 {% endwith %}

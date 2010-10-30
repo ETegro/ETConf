@@ -1,6 +1,6 @@
 # ETConf -- web-based user-friendly computer hardware configurator
-# Copyright (C) 2010 ETegro Technologies, PLC <http://www.etegro.com/>
-#                    Sergey Matveev <sergey.matveev@etegro.com>
+# Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
+#                         Sergey Matveev <sergey.matveev@etegro.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as

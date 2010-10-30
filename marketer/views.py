@@ -1,6 +1,6 @@
 # ETConf -- web-based user-friendly computer hardware configurator
-# Copyright (C) 2010 ETegro Technologies, PLC <http://www.etegro.com/>
-#                    Sergey Matveev <sergey.matveev@etegro.com>
+# Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
+#                         Sergey Matveev <sergey.matveev@etegro.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,11 +17,9 @@
 
 from configurator.creator.models import *
 
-import configurator.marketer.servers_urls
-
 from django.template.loader import render_to_string
 from django.http import HttpResponse
-from django.core.cache import cache
+from django.views.decorators.cache import *
 
 from datetime import datetime
 
@@ -33,26 +31,24 @@ def __picture_url( alias ):
 	# ETegro's specific: it's computer models aliases consists of
 	# two \w characters (meaning "rack-mounted", "tower", "storage"
 	# and so on) and everything else as subdirectory path
-	return "http://www.company.com/img/%s/%s/0.jpg" % ( alias[0:2], alias[2:] )
+	return "http://www.etegro.com/img/%s/%s/0.jpg" % ( alias[0:2], alias[2:] )
 
+@never_cache
 def perform( request ):
-	response = cache.get( "yml_response" )
-	if response: return response
 	offers = []
-	for alias, url in configurator.marketer.servers_urls.URLS.iteritems():
-		cm = ComputerModel.objects.get( alias = alias )
-		offers.append( { "url": "http://www.company.com/%s" % url,
+
+	for cm in ComputerModel.objects.filter( is_active = True ):
+		cm.save() # Recalculate default price
+		offers.append( { "url": cm.get_url()[0],
 				 "id": cm.id,
-				 "price": int( cm.get_default_price() ),
+				 "price": int( cm.default_price ),
 				 "description": cm.slogan,
 				 "model": cm.name,
-				 "vendorcode": alias,
-				 "picture": __picture_url( alias ),
+				 "vendorcode": cm.alias,
+				 "picture": __picture_url( cm.alias ),
 				 "params": Specification.objects.filter( computermodel = cm ).filter( skey__is_summary__exact = True ).order_by( "skey__order" ).values_list( "skey__name", "svalue" ) } )
 	response = HttpResponse( render_to_string( "market.xml",
 						 { "date": __yandex_date( datetime.now() ),
 						   "offers": offers } ),
 				 mimetype = "application/xml" )
-				
-	cache.add( "yml_response", response )
 	return response

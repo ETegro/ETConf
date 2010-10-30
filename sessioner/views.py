@@ -15,16 +15,33 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from django import forms
+from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
-from configurator.creator.models import *
+def get_next( request ):
+	if request.GET.has_key( "next" ):
+		return request.GET["next"]
+	else:
+		return "http://www.etegro.com/"
 
-from django.utils.translation import ugettext as _
+def perform_login( request ):
+	r = request.GET
+	next = get_next( request )
 
-class ComputerModelRequestForm( forms.Form ):
-	company = forms.CharField( label = _("Company"), required = False )
-	name = forms.CharField( label = _("Your name") )
-	address = forms.CharField( label = _("Delivery address"), widget = forms.Textarea, required = False )
-	email = forms.EmailField( label = _("Your email") )
-	telephone = forms.CharField( label = _("Contact telephone"), required = False )
-	request = forms.CharField( label = _("Request text"), widget = forms.Textarea )
+	if request.user.is_authenticated():
+		return HttpResponseRedirect( next )
+
+	user = None
+	if r.has_key( "username" ) and r.has_key( "password" ):
+		user = authenticate( username = r["username"],
+				     password = r["password"] )
+	if user is not None:
+		if user.is_active:
+			login( request, user )
+
+	return HttpResponseRedirect( next )
+
+def perform_logout( request ):
+	logout( request )
+	return HttpResponseRedirect( get_next( request ) )

@@ -1,13 +1,13 @@
-{% autoescape off %}{% with order_request as oreq %}{% ifequal settings.LANGUAGE_CODE "ru" %}
-                        Сформированный Вами заказ
-                        =========================
-Номер заказа: {{ oreq.id }}
-Компания: {{ oreq.company }}
-Имя: {{ oreq.name }}
-Адрес: {{ oreq.address }}
-E-mail: {{ oreq.email }}
-Телефон: {{ oreq.telephone }}
-Примечание: {{ oreq.comment }}
+{% load i18n %}{% autoescape off %}{% with order_request as oreq %}{% blocktrans %}
+                               Your order
+                               =========={% endblocktrans %}
+{% trans "Order number" %}: {{ oreq.id }}
+{% trans "Company" %}: {{ oreq.company }}
+{% trans "Name" %}: {{ oreq.name }}
+{% trans "Address" %}: {{ oreq.address }}
+{% trans "E-mail" %}: {{ oreq.email }}
+{% trans "Telephone" %}: {{ oreq.telephone }}
+{% trans "Comment" %}: {{ oreq.comment }}
 {% for order in orders %}
 ------------------------------------------------------------------------
 {{ order.computer_model.name }}  --  {{ order.price }} {{ order.currency }}
@@ -19,27 +19,10 @@ E-mail: {{ oreq.email }}
 {% endfor %}
 
 ========================================================================
-Общая сумма: {{ oreq.price }} {{ oreq.currency }}
+{% trans "Total price" %}: {{ oreq.price }} {{ oreq.currency }}
+{% if partner %}
+{{ partner.2.signature }}
 {% else %}
-                          Your requested order
-                          ====================
-Order number: {{ oreq.id }}
-Company: {{ oreq.company }}
-Name: {{ oreq.name }}
-Address: {{ oreq.address }}
-E-mail: {{ oreq.email }}
-Telephone: {{ oreq.telephone }}
-Comment: {{ oreq.comment }}
-{% for order in orders %}
-------------------------------------------------------------------------
-{{ order.computer_model.name }}  --  {{ order.price }} {{ order.currency }}
-------------------------------------------------------------------------
-{% for group in order.groups %}
-* {{ group.0.subsystem.description }}:
-  {% for component in group.1 %}{{ component.quantity }} x {{ component.component.name }}
-  {% endfor %}{% endfor %}
-{% endfor %}
-
-========================================================================
-Total price: {{ oreq.price }} {{ oreq.currency }}
-{% endifequal %}{% endwith %}{% endautoescape %}
+{% trans "Order's status can be asked from sales manager" %}:
+{% trans "Telephone" %} - +7-(495)-380-0288; {% trans "E-mail" %} - sales@etegro.com.
+{% endif %}{% endwith %}{% endautoescape %}
