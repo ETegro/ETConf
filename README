@@ -134,6 +134,7 @@ program installed and fonts in some directory.
   % pushd rst2pdf-0.15 && python setup.py install && popd && rm -fr rst2pdf-0.15
   % cp -r /somewhere/fonts /tmp/fonts
   % sed -i "s/^FONTS_PATH=.*$$/FONTS_PATH=\/tmp\/fonts/" Makefile.config
+  % # Install prototype.js and scriptaculous into media/js directory
 
                               Installation
                               ============
@@ -141,9 +142,9 @@ Because ETConf is written on an interpreted language -- there is no need
 to compile anything in it. Just create database, edit Makefile.config,
 make sync-DATABASE, configure your HTTP server and that is all.
 
-For the first start, you should "make sync" that will create database
-with necessary tables. Also it will ask you for password for
-administrator named "admin".
+For the first start, you should "make sync-{postgresql,mysql}" that
+will create database with necessary tables. Also it will ask you for
+password for administrator named "admin".
 
 There is an example ETegro Technologies database of various server's
 configurations. You can load it into database by "make example".

@@ -29,7 +29,7 @@ ORDER_CC = "www@etegro.com"
 ################################################################################
 DEFAULT_CONTENT_TYPE = "text/html" # Should be "application/xhtml+xml"
 SESSION_COOKIE_NAME = "configurator-sessionid"
-LOGIN_URL = "/wizard/admin"
+LOGIN_URL = "/configurator/admin"
 
 ADMINS = (
 	('Sergey Matveev', 'sergey.matveev@etegro.com'),
