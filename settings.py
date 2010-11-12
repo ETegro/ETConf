@@ -15,6 +15,8 @@ CACHE_TIMEOUT = 1800
 CART_COOKIE_NAME = "configurator-cart"
 
 CACHE_BACKEND = 'to be filled'
+CACHE_MIDDLEWARE_SECONDS = 600
+CACHE_MIDDLEWARE_KEY_PREFIX = ""
 
 IMAGES_PATH = 'to be filled'
 FONTS_PATH = 'to be filled'
