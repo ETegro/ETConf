@@ -1,18 +1,18 @@
-                                 ======
-                                 ETConf
-                                 ======
+======
+ETConf
+======
                                     
-                                Summary
-                                =======
+Summary
+=======
 Web-based user-friendly interface that is intended to build-up
 your computer's hardware configuration from different components in
 real-time (AJAX) with necessary validation of all requirements and
 compatibilities between components.
 
 It heavily uses AJAX technology to lower delays between user's
-actions. It is written on Django framework[1] and needed to be
+actions. It is written on `Django framework`_ and needed to be
 run under FastCGI or WSGI compatible HTTP server. Also, overall
-architecture is heavily influenced by ETegro Technologies company[2]
+architecture is heavily influenced by `ETegro Technologies company`_
 needs.
 
 ETConf can validate hardware configuration, preventing user from
@@ -20,13 +20,13 @@ creating either uncompatible or incorrect machine. Also, ETConf
 provides ability to store build-up computers in cart and to provide
 order request for salesmen.
 
-                                License
-                                =======
+License
+=======
 ETConf is free software and is licensed under GNU Affero GPL version 3
 or higher.
 
-                             Example usage
-                             =============
+Example usage
+=============
 * Costumer willing to buy a server visits some company's catalogue
 * Simultaneously configurator's window is loading using AJAX technology
 * Costumer selects necessary components and their quantities, seeing
@@ -40,8 +40,8 @@ or higher.
 * Confirmation email to salesmen, costumer will be sent. His order will
   be saved in database to not to lost it
 
-                                Features
-                                ========
+Features
+========
 * Validation of component's compatibilities, requirements and
   correctnesss of overall configuration
 * User-friendly simple web-based AJAX real-time interface, preventing
@@ -51,16 +51,16 @@ or higher.
 * Ability to use so-called "conversions" like Google AdWords does (just
   simple raw small ECMAScripts included where they need to be)
 * Ability to produce PDF documents with computer overview
-* Ability to generate Yandex Market service's[3] YMLs
-* Using of reStructured Text[4] in description of various objects
+* Ability to generate `Yandex Market service's`_ YMLs
+* Using of `reStructured Text`_ in description of various objects
 
-                              Translations
-                              ------------
+Translations
+------------
 * English
 * Russian
 
-                      Internal structure overview
-                      ===========================
+Internal structure overview
+===========================
 The main object in this configurator is "Computer model". As a rule it
 is some base of server/computer that can has different CPUs, different
 quantity of memory, different controllers and so on. Every computer
@@ -111,22 +111,25 @@ very often, but can be useful someday.
 And last remark: all component groups can be grouped together in
 so-called "subsystems".
 
-                              Requirements
-                              ============
-* Python interpreter[5] 2.5 version or higher
+Requirements
+============
+* `Python interpreter`_ 2.5 version or higher
 * Django framework 1.1.1
 * MySQL or PostgreSQL database with correpsonding Python library
 * Python YAML library
 * Docutils to render reStructured Text
 * GNU Make
 * Memcache daemon with corresponding Python library for caching purposes
-* Prototype.js[7] and Script.Aculo.Us[8] ECMAScript libraries
+* Prototype.js_ and Script.Aculo.Us_ ECMAScript libraries
 
-PDF generator uses rst2pdf command[6] to render them. You must have rst2pdf
+PDF generator uses rst2pdf_ command to render them. You must have rst2pdf
 program installed and fonts in some directory.
 
-                   Example installation under Debian
-                   ---------------------------------
+Example installation under Debian
+---------------------------------
+
+::
+
   % apt-get install python python-docutils python-flup python-memcache python-psycopg2 python-yaml make python-mysql memcached python-setuptools build-essential libfreetype6-dev python-dev python-imaging
   % wget -O - http://www.djangoproject.com/download/1.1.1/tarball/ | gunzip -c | tar xvf -
   % pushd Django-1.1.1 && python setup.py install && popd && rm -fr Django-1.1.1
@@ -136,8 +139,8 @@ program installed and fonts in some directory.
   % sed -i "s/^FONTS_PATH=.*$$/FONTS_PATH=\/tmp\/fonts/" Makefile.config
   % # Install prototype.js and scriptaculous into media/js directory
 
-                              Installation
-                              ============
+Installation
+============
 Because ETConf is written on an interpreted language -- there is no need
 to compile anything in it. Just create database, edit Makefile.config,
 make sync-DATABASE, configure your HTTP server and that is all.
@@ -154,23 +157,25 @@ shared static files directory.
 
 And, also you can edit setting.py for seldom varied options.
 
-                         Running under Lighttpd
-                         ----------------------
+Running under Lighttpd
+----------------------
 To be filled.
 
-                          Running under Apache
-                          --------------------
+Running under Apache
+--------------------
 The most easy way to run ETConf under Apache is to use WSGI interface.
 Be sure to have necessary Apache's WSGI module installed, and add the
 following example string into your configuration file:
+
+::
 
   WSGIScriptAlias /configurator /path/to/configurator/django.wsgi
 
 After that, your configurator will be available with URL's prefix
 "/configurator".
 
-                                 Notes
-                                 =====
+Notes
+=====
 * Yandex Market's YML generator currently is very ETegro (and Russia
   overall) specific. Please look deeper into *marketer/* subdirectory
   if you need.  It's YML is available by /market.xml URL.
@@ -178,11 +183,18 @@ After that, your configurator will be available with URL's prefix
   generate pretty outlooking PDFs. Also, edit rst2pdf template located
   in *media/rst2pdf-stylesheet.style*.
 
-[1] http://www.djangoproject.com/
-[2] http://www.etegro.com/
-[3] http://market.yandex.ru/
-[4] http://docutils.sourceforge.net/rst.html
-[5] http://www.python.org/
-[6] http://code.google.com/p/rst2pdf/
-[7] http://www.prototypejs.org/
-[8] http://script.aculo.us/
+Contacts
+========
+Feel free to contact us for either support, either suggestions or any
+other questions! Currently, I am the only single developer, so it is
+better to contact directly me: email to either sergey dot matveev at
+etegro dot com or to stargrave at stargrave dot org.
+
+.. _Django framework: http://www.djangoproject.com/
+.. _ETegro Technologies company: http://www.etegro.com/
+.. _Yandex Market service's: http://market.yandex.ru/
+.. _reStructured Text: http://docutils.sourceforge.net/rst.html
+.. _Python interpreter: http://www.python.org/
+.. _rst2pdf: http://code.google.com/p/rst2pdf/
+.. _Prototype.js: http://www.prototypejs.org/
+.. _Script.Aculo.Us: http://script.aculo.us/
