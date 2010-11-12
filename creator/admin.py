@@ -1,6 +1,6 @@
 # ETConf -- web-based user-friendly computer hardware configurator
-# Copyright (C) 2010 ETegro Technologies, PLC <http://www.etegro.com/>
-#                    Sergey Matveev <sergey.matveev@etegro.com>
+# Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
+#                         Sergey Matveev <sergey.matveev@etegro.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -20,6 +20,7 @@ from configurator.creator.models import *
 from django.utils.translation import ugettext as _
 
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 
 class ExpandingAdmin( admin.ModelAdmin ):
 	ordering = [ "feature" ]
@@ -64,6 +65,8 @@ class ComponentAdmin( admin.ModelAdmin ):
 			 "link_provides",
 			 "link_move_clone" ]
 	list_filter = [ "component_group" ]
+	actions = [ "add_feature" ]
+
 	def link_move_clone( self, component ):
 		code = "<a href=\"%s\">&uarr;</a>&nbsp;" % reverse( "configurator.creator.views.move_component_up",
 								    args = [ component.id ] )
@@ -72,6 +75,9 @@ class ComponentAdmin( admin.ModelAdmin ):
 		code = code + "<a href=\"%s\">+</a>" % reverse( "configurator.creator.views.clone_component",
 								args = [ component.id ] )
 		return code
+	link_move_clone.allow_tags = True
+	link_move_clone.short_description = _("Ordering/Clone")
+
 	def link_requires( self, component ):
 		code = "<ul>"
 		for r in [ Requiring.objects.get( component = component, feature = f ) for f in component.requires.all() ]:
@@ -81,6 +87,9 @@ class ComponentAdmin( admin.ModelAdmin ):
 				r.quantity ) )
 			
 		return code + "</ul>"
+	link_requires.allow_tags = True
+	link_requires.short_description = _("Requirements")
+
 	def link_provides( self, component ):
 		code = "<ul>"
 		for p in [ Providing.objects.get( component = component, feature = f ) for f in component.provides.all() ]:
@@ -89,12 +98,13 @@ class ComponentAdmin( admin.ModelAdmin ):
 				p.feature,
 				p.quantity ) )
 		return code + "</ul>"
-	link_move_clone.allow_tags = True
-	link_move_clone.short_description = _("Ordering/Clone")
-	link_requires.allow_tags = True
-	link_requires.short_description = _("Requirements")
 	link_provides.allow_tags = True
 	link_provides.short_description = _("Providings")
+
+	def add_feature( self, request, queryset ):
+		selected = request.POST.getlist( admin.ACTION_CHECKBOX_NAME )
+		return HttpResponseRedirect( reverse( "configurator.creator.views.features_add" ) + "?ids=%s" % ",".join( selected ) )
+	add_feature.short_description = _("Add features")
 
 class ProvidingAdmin( admin.ModelAdmin ):
 	ordering = [ "component" ]
@@ -113,7 +123,7 @@ class ComputerModelAdmin( admin.ModelAdmin ):
 			 "slogan",
 			 "link_clone",
 			 "list_specifications" ]
-	fields = [ "name", "description", "alias", "slogan", "components" ]
+	fields = [ "name", "description", "alias", "slogan", "components", "is_action", "is_active", "url" ]
 	def link_clone( self, computermodel ):
 		return "<a href=\"%s\">+</a>" % ( reverse( "configurator.creator.views.clone_computermodel",
 						  args = [ computermodel.id ] ) )

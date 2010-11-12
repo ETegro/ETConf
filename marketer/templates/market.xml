@@ -19,12 +19,12 @@
 	<offers>
 		{% for offer in offers %}
 		<offer id="{{ offer.id }}" type="vendor.model" available="true">
-			<url>{{ offer.url }}</url>
+			<url>{{ offer.url }}/buy</url>
 			<price>{{ offer.price }}</price>
 			<currencyId>RUR</currencyId>
 			<categoryId>10</categoryId>
 			<picture>{{ offer.picture }}</picture>
-			<delivery>false</delivery>
+			<delivery>true</delivery>
 			<typePrefix>Сервер</typePrefix>
 			<vendor>ETegro</vendor>
 			<vendorCode>{{ offer.vendorcode }}</vendorCode>

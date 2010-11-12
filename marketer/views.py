@@ -42,7 +42,7 @@ def perform( request ):
 		offers.append( { "url": cm.get_url()[0],
 				 "id": cm.id,
 				 "price": int( cm.default_price ),
-				 "description": cm.slogan,
+				 "description": cm.short_configuration(),
 				 "model": cm.name,
 				 "vendorcode": cm.alias,
 				 "picture": __picture_url( cm.alias ),

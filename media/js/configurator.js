@@ -1,7 +1,7 @@
 /* 
  * ETConf -- web-based user-friendly computer hardware configurator
- * Copyright (C) 2010 ETegro Technologies, PLC <http://www.etegro.com/>
- *                    Sergey Matveev <sergey.matveev@etegro.com>
+ * Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
+ *                         Sergey Matveev <sergey.matveev@etegro.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,8 +24,36 @@ var FLOWER_PATH = "/img/configurator/flower.gif";
 var IDS = {};
 var Flower = new Image();
 
+function parse_get_request() {
+	var get = {};
+	var get_part = ("" + window.location).split("?")[1];
+	if( ! get_part ){ return {} };
+	get_part.split("&").each( function( part ) {
+		part_key = part.split("=")[0];
+		part_value = part.split("=")[1];
+		get[ part_key ] = part_value;
+	} );
+	return get;
+};
+
+function parse_ids( ids ){
+	ids.split(",").each( function( pair ){
+		// [ id, quantity ] = pair.split("-"); -- This is not working in lame browsers
+		id = pair.split("-")[0];
+		quantity = pair.split("-")[1];
+		IDS[ id ] = quantity;
+	} );
+};
+
 window.onload = function(){
 	Flower.src = FLOWER_PATH;
+
+	if( typeof parse_get_request()["previous_order"] != "undefined" ){
+		parse_ids( parse_get_request()["configuration"] );
+		configurate_perform();
+		return;
+	};
+
 	new Ajax.Request( $("url").value, {
 		method: "get",
 		onLoading: function(){
@@ -35,12 +63,7 @@ window.onload = function(){
 			var response = transport.responseText;
 			$("configurator").innerHTML = response;
 			$("loader").innerHTML = gettext("Ready");
-			$("ids").value.split(",").each( function( pair ){
-				// [ id, quantity ] = pair.split("-"); -- This is not working in lame browsers
-				id = pair.split("-")[0];
-				quantity = pair.split("-")[1];
-				IDS[ id ] = quantity;
-			} );
+			parse_ids( $("ids").value );
 			remove_alone_selects();
 		},
 		on404: function() {
@@ -112,7 +135,10 @@ function configurate_perform() {
 function cart_add( url ) {
 	new Ajax.Request( url, {
 		method: "get",
-		parameters: { components: serialize_ids() },
+		parameters: {
+			components: serialize_ids(),
+			previous_order: parse_get_request()["previous_order"]
+		},
 		onLoading: function(){
 			$("add_to_cart_button").value = gettext("Adding to cart");
 		},

@@ -1,6 +1,6 @@
 # ETConf -- web-based user-friendly computer hardware configurator
-# Copyright (C) 2010 ETegro Technologies, PLC <http://www.etegro.com/>
-#                    Sergey Matveev <sergey.matveev@etegro.com>
+# Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
+#                         Sergey Matveev <sergey.matveev@etegro.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -29,15 +29,17 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.core.cache import cache
 from django.views.decorators.cache import *
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 import re
 import subprocess
 
+is_superuser = lambda user: user.is_superuser
+
 def __reverse_admin( postfix ):
 	return "%s%s" % ( reverse( "admin:app_list", args = [ "creator" ] ), postfix )
 
-@login_required
+@user_passes_test( is_superuser )
 def move_component_up( request, component_id ):
 	component = get_object_or_404( Component, id = component_id )
 	gc = [ c for c in Component.objects.filter( component_group = component.component_group ).order_by( "order" ) ]
@@ -49,7 +51,7 @@ def move_component_up( request, component_id ):
 		component.save()
 	return HttpResponseRedirect( __reverse_admin( "component/?component_group__id__exact=%d" % component.component_group.id ) )
 
-@login_required
+@user_passes_test( is_superuser )
 def move_component_down( request, component_id ):
 	component = get_object_or_404( Component, id = component_id )
 	gc = [ c for c in Component.objects.filter( component_group = component.component_group ).order_by( "order" ) ]
@@ -61,7 +63,7 @@ def move_component_down( request, component_id ):
 		component.save()
 	return HttpResponseRedirect( __reverse_admin( "component/?component_group__id__exact=%d" % component.component_group.id ) )
 
-@login_required
+@user_passes_test( is_superuser )
 def clone_component( request, component_id ):
 	component = get_object_or_404( Component, id = component_id )
 	neu = Component( name = "%s %s" % ( component.name, _("Clone") ),
@@ -84,15 +86,14 @@ def clone_component( request, component_id ):
 		neu_r.save()
 	return HttpResponseRedirect( reverse( "admin:creator_component_change", args = [ neu.id ] ) )
 
-@login_required
+@user_passes_test( is_superuser )
 def clone_computermodel( request, computermodel_id ):
 	computermodel = get_object_or_404( ComputerModel, id = computermodel_id )
 	neu = ComputerModel( name = "%s %s" % ( computermodel.name, _("Clone") ),
 			     description = computermodel.description,
 			     alias = "%s-clone" % computermodel.alias,
 			     default_price = computermodel.default_price,
-			     slogan = computermodel.slogan,
-			     support = computermodel.support )
+			     slogan = computermodel.slogan )
 	neu.save()
 	for c in computermodel.components.all(): neu.components.add( c )
 	return HttpResponseRedirect( reverse( "admin:creator_computermodel_change", args = [ neu.id ] ) )
@@ -153,43 +154,43 @@ def __change_order_down( modelname, object ):
 	if object.order == modelname.objects.last_order(): return
 	__change_order( modelname, object, lambda x: x + 1 )
 
-@login_required
+@user_passes_test( is_superuser )
 def move_specification_key_up( request, specification_key_id ):
 	skey = get_object_or_404( SpecificationKey, id = specification_key_id )
 	__change_order_up( SpecificationKey, skey )
 	return HttpResponseRedirect( __reverse_admin( "specificationkey" ) )
 
-@login_required
+@user_passes_test( is_superuser )
 def move_specification_key_down( request, specification_key_id ):
 	skey = get_object_or_404( SpecificationKey, id = specification_key_id )
 	__change_order_down( SpecificationKey, skey )
 	return HttpResponseRedirect( __reverse_admin( "specificationkey" ) )
 
-@login_required
+@user_passes_test( is_superuser )
 def move_component_group_up( request, component_group_id ):
 	component_group = get_object_or_404( ComponentGroup, id = component_group_id )
 	__change_order_up( ComponentGroup, component_group )
 	return HttpResponseRedirect( __reverse_admin( "componentgroup" ) )
 
-@login_required
+@user_passes_test( is_superuser )
 def move_component_group_down( request, component_group_id ):
 	component_group = get_object_or_404( ComponentGroup, id = component_group_id )
 	__change_order_down( ComponentGroup, component_group )
 	return HttpResponseRedirect( __reverse_admin( "componentgroup" ) )
 
-@login_required
+@user_passes_test( is_superuser )
 def move_subsystem_up( request, subsystem_id ):
 	subsystem = get_object_or_404( ComponentGroupSubsystem, id = subsystem_id )
 	__change_order_up( ComponentGroupSubsystem, subsystem )
 	return HttpResponseRedirect( __reverse_admin( "componentgroupsubsystem" ) )
 
-@login_required
+@user_passes_test( is_superuser )
 def move_subsystem_down( request, subsystem_id ):
 	subsystem = get_object_or_404( ComponentGroupSubsystem, id = subsystem_id )
 	__change_order_down( ComponentGroupSubsystem, subsystem )
 	return HttpResponseRedirect( __reverse_admin( "componentgroupsubsystem" ) )
 
-@login_required
+@user_passes_test( is_superuser )
 def specifications_clone( request, computermodel_src_alias, computermodel_dst_alias ):
 	src = get_object_or_404( ComputerModel, alias = computermodel_src_alias )
 	dst = get_object_or_404( ComputerModel, alias = computermodel_dst_alias )
@@ -205,8 +206,8 @@ def __computermodel_components( computermodel ):
 	for c in computermodel.components.all(): included = included | Q( id = c.id )
 	return included
 
-@login_required
 @never_cache
+@user_passes_test( is_superuser )
 def components_editor( request, computermodel_alias ):
 	cm = get_object_or_404( ComputerModel, alias = computermodel_alias )
 	if request.method == "POST":
@@ -248,8 +249,8 @@ def components_editor( request, computermodel_alias ):
 				   "form": ComputerModelEditForm( { "slogan": cm.slogan,
 				   				    "description": cm.description } ) } )
 
-@login_required
 @never_cache
+@user_passes_test( is_superuser )
 def component_edit( request ):
 	r = request.POST
 	component = get_object_or_404( Component, id = r["component_id"] )
@@ -277,8 +278,8 @@ def component_edit( request ):
 				 { "form": form,
 				   "component": component } )
 
-@login_required
 @never_cache
+@user_passes_test( is_superuser )
 def specification_edit( request, computermodel_alias ):
 	computermodel = get_object_or_404( ComputerModel, alias = computermodel_alias )
 	r = request.POST
@@ -297,8 +298,8 @@ def specification_edit( request, computermodel_alias ):
 				     "specification_keys": SpecificationKey.objects.all().order_by( "order" ),
 				     "computermodel": computermodel } )
 
-@login_required
 @never_cache
+@user_passes_test( is_superuser )
 def computermodel_edit( request, computermodel_alias ):
 	pass
 	r = request.POST
@@ -315,3 +316,40 @@ def computermodel_edit( request, computermodel_alias ):
 				   { "computermodel": cm,
 				     "message": message,
 				     "form": form } )
+
+@never_cache
+@user_passes_test( is_superuser )
+def features_add( request ):
+	if request.GET.has_key("ids"):
+		ids = request.GET["ids"]
+	else:
+		ids = request.POST["ids"]
+
+	query = Q()
+	for id in [ int( id ) for id in ids.split(",") ]:
+		query = query | Q( id = id )
+	components = Component.objects.filter( query )
+
+	if request.GET.has_key("ids"):
+		ids = request.GET["ids"]
+		form = FeatureAddForm()
+	else:
+		ids = request.POST["ids"]
+		form = FeatureAddForm( request.POST )
+		if form.is_valid():
+			data = form.cleaned_data
+			for component in components.all():
+				if data["type"] == "providing":
+					providing = Providing.objects.get_or_create( component = component,
+										     quantity = data["quantity"],
+										     feature = data["feature"] )
+				else:
+					requiring = Requiring.objects.get_or_create( component = component,
+										     quantity = data["quantity"],
+										     feature = data["feature"],
+										     parity = data["parity"] )
+			return HttpResponseRedirect( __reverse_admin( "component" ) )
+	return render_to_response( "features_add.html",
+				 { "ids": ids,
+				   "form": form,
+				   "components": components } )
