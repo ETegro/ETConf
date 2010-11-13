@@ -173,7 +173,7 @@ def order_show( request ):
 		form = OrderSubmitForm()
 	return render_to_response( "cart.html", {
 				   "orders": [ o.get_configuration() for o in orders.order_by( "created" ) ],
-				   "cache_timeout": settings.CACHE_TIMEOUT,
+				   "cache_timeout": settings.CACHE_MIDDLEWARE_SECONDS,
 			           "partner": partner,
 				   "form": form,
 				   "currency": Order.objects.filter( cookie_id = cookie_id )[0].get_configuration()["currency"],

@@ -11,7 +11,6 @@ DATABASE_PASSWORD = 'to be filled'
 DATABASE_HOST = 'to be filled'
 DATABASE_PORT = 'to be filled'
 
-CACHE_TIMEOUT = 1800
 CART_COOKIE_NAME = "configurator-cart"
 
 CACHE_BACKEND = 'to be filled'

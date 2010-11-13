@@ -245,7 +245,7 @@ def perform( request, computermodel_alias ):
 				 { "configurator": render( computermodel, components( request,
 				 						      computermodel ),
 										      user = __partner_user( request ) ),
-				   "cache_timeout": settings.CACHE_TIMEOUT },
+				   "cache_timeout": settings.CACHE_MIDDLEWARE_SECONDS },
 				   context_instance=RequestContext(request) )
 
 def configurator( request, computermodel_alias ):
@@ -254,7 +254,7 @@ def configurator( request, computermodel_alias ):
 				 { "configurator": render( computermodel, components( request,
 				 						      computermodel ),
 										      user = __partner_user( request ) ),
-				   "cache_timeout": settings.CACHE_TIMEOUT,
+				   "cache_timeout": settings.CACHE_MIDDLEWARE_SECONDS,
 				   "settings": settings },
 				   context_instance=RequestContext(request) )
 
