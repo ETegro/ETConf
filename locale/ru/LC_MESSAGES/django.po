@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: configurator 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-30 21:18+0400\n"
+"POT-Creation-Date: 2010-11-13 10:47+0300\n"
 "PO-Revision-Date: 2010-03-27 17:33+0300\n"
 "Last-Translator: Sergey Matveev <sergey.matveev@etegro.com>\n"
 "Language-Team: Russian\n"
@@ -196,7 +196,7 @@ msgstr "Добавить свойства"
 msgid "Clone"
 msgstr "Клон"
 
-#: creator/admin.py:138 creator/models.py:258
+#: creator/admin.py:138 creator/models.py:271
 #: creator/templates/components_editor.html:47
 msgid "Specifications"
 msgstr "Спецификации"
@@ -346,7 +346,7 @@ msgstr "Имя ключа"
 msgid "Is summary"
 msgstr "В сводке"
 
-#: creator/models.py:181 creator/models.py:250
+#: creator/models.py:181 creator/models.py:263
 msgid "Specification key"
 msgstr "Ключ спецификации"
 
@@ -371,39 +371,43 @@ msgid "Website URL"
 msgstr "URL на сайте"
 
 #: creator/models.py:207
+msgid "Short configuration"
+msgstr "Короткая конфигурация"
+
+#: creator/models.py:211
 msgid "Support"
 msgstr "Поддержка"
 
-#: creator/models.py:244 creator/models.py:249
+#: creator/models.py:257 creator/models.py:262
 #: creator/templates/components_editor.html:48
 msgid "Computer model"
 msgstr "Модель компьютера"
 
-#: creator/models.py:245
+#: creator/models.py:258
 msgid "Computer models"
 msgstr "Модели компьютеров"
 
-#: creator/models.py:251
+#: creator/models.py:264
 msgid "Value"
 msgstr "Значение"
 
-#: creator/models.py:257
+#: creator/models.py:270
 msgid "Specification"
 msgstr "Спецификация"
 
-#: creator/models.py:262
+#: creator/models.py:275
 msgid "Source"
 msgstr "Источник"
 
-#: creator/models.py:265
+#: creator/models.py:278
 msgid "Target"
 msgstr "Цель"
 
-#: creator/models.py:270
+#: creator/models.py:283
 msgid "Substitution"
 msgstr "Взаимозаменяемость"
 
-#: creator/models.py:271
+#: creator/models.py:284
 msgid "Substitutions"
 msgstr "Взаимозаменяемости"
 
