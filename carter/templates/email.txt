@@ -10,7 +10,7 @@
 {% trans "Comment" %}: {{ oreq.comment }}
 {% for order in orders %}
 ------------------------------------------------------------------------
-{{ order.computer_model.name }}  --  {{ order.price }} {{ order.currency }}
+{{ order.quantity }} * {{ order.computer_model.name }}  --  {{ order.price_quantity }} {{ order.currency }}
 ------------------------------------------------------------------------
 {% for group in order.groups %}
 * {{ group.0.subsystem.description }}:

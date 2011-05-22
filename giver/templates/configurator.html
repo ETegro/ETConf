@@ -39,12 +39,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 
 {% for subsystem in c.subsystems %}
-<h2> {{ subsystem.0.description }} </h2>
+<h2> {{ subsystem.0.sdescription }} </h2>
 
 {% if subsystem.0.explanation %}
 	<div class="configurator-component-description">
-		{% cache cache_timeout subsystem_explanation subsystem.0.explanation %}
-		{{ subsystem.0.explanation|restructuredtext }}
+		{% cache cache_timeout subsystem_explanation subsystem.0.sexplanation %}
+		{{ subsystem.0.sexplanation|restructuredtext }}
 		{% endcache %}
 	</div>
 {% endif %}
@@ -53,7 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	{% for group in c.groups %}
 	{% ifequal group.name g.name %}
 
-	{% if g.description %}<h3>{{ g.description }}</h3>{% endif %}
+	{% if g.description %}<h3>{{ g.sdescription }}</h3>{% endif %}
 	<ul>
 		{% for component in group.components %}
 		<li {% if component.hidden %}class="configurator-component-hidden"{% endif %}>
@@ -65,12 +65,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			       name="{{ group.name }}"
 			       id="input-{{ component.object.id }}"
 			       value="{{ component.object.id }}"
-			       onchange="configurate_input({{ component.object.id }})"
 			       {% if component.quantity %}checked="checked"{% endif %} />
 
-			<select name="select-{{ component.object.id }}"
-				id="select-{{ component.object.id }}"
-				onchange="configurate_select( {{ component.object.id }}, this.value )">
+			<select name="select-{{ component.object.id }}" id="select-{{ component.object.id }}">
 				{% for selection in component.selections %}
 					<option value="{{ selection }}"
 						{% ifequal selection component.quantity %}
@@ -84,13 +81,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		</div>
 
 		<label for="input-{{ component.object.id }}" class="configurator-component-name">
-			{{ component.object.name }}
+			{{ component.object.sname }}
 		</label>
 
 		<label for="input-{{ component.object.id }}">
 			<div class="configurator-prices">
 				<div class="configurator-price-single">
-					{% cache cache_timeout price-single component.price_single %}
+					{% cache cache_timeout price-single component.price_single c.discount %}
 					{{ component.price_single|intcomma }}&#160;
 					{% endcache %}
 					<span class="configurator-currency">{{ c.currency }}</span>
@@ -104,11 +101,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</div>
 		</label>
 
-		{% if component.object.description %}
+		{% if component.object.sdescription %}
 			<label for="input-{{ component.object.id }}">
 				<div class="configurator-component-description">
-					{% cache cache_timeout component_description component.object.description %}
-					{{ component.object.description|restructuredtext }}
+					{% cache cache_timeout component_description component.object.sdescription %}
+					{{ component.object.sdescription|restructuredtext }}
 					{% endcache %}
 				</div>
 			</label>
@@ -121,6 +118,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endfor %}
 {% endfor %}
 
+<div>
+	<h2>{% trans "Quantity of servers" %}</h2>
+	<p><input type="text"
+		  size="4"
+		  id="overall_quantity"
+		  name="overall_quantity"
+		  onchange="update_quantity()"
+		  value="{{ c.quantity }}" /></p>
+</div>
+
 <div class="total"><h2>{% trans "Total price" %}:</h2>
 	<div>
 		{% if c.discount %}
@@ -128,10 +135,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			&#160;<span class="configurator-currency">{{ c.currency }}</span>
 			(
 				{% trans "without discount" %}:&#160;
-				{{ c.price|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span>
+				{% include "price.html" %}
 			)
 		{% else %}
-			{{ c.price|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span>
+			{% include "price.html" %}
 		{% endif %}
 	</div>
 </div>

@@ -119,7 +119,7 @@ def __validate( components ):
 			pool[ e.feature ] = e.quantity
 	return ( components, pool )
 
-def render( computermodel, component_ids, user = None ):
+def render( computermodel, component_ids, quantity = 1, user = None ):
 	components = {}
 	computermodel_components = computermodel.components.order_by( "order" ).select_related()
 
@@ -177,9 +177,9 @@ def render( computermodel, component_ids, user = None ):
 				entity["price_total"] = entity["price_single"] * entity["quantity"]
 				price = price + entity["price_total"]
 			if calculated_discount:
-				entity["price_single"] = entity["price_single"] * calculated_discount[0]
+				entity["price_single"] = entity["price_single"] * (1 - calculated_discount[0])
 				if entity.has_key( "price_total" ):
-					entity["price_total"] = entity["price_total"] * calculated_discount[0]
+					entity["price_total"] = entity["price_total"] * (1 - calculated_discount[0])
 			if entity["selections"][0] == 0:
 				entity["hidden"] = True
 			group["components"].append( entity )
@@ -205,17 +205,26 @@ def render( computermodel, component_ids, user = None ):
 			     "value": int( calculated_discount[0] * 100 ),
 			     "price": int( price * (1.0 - calculated_discount[0]) ),
 			     "formula": calculated_discount[2] }
+		discount["price_quantity"] = discount["price"] * quantity
 	else:
 		discount = None
 
 	return { "groups": groups,
 		 "price": int( price ),
+		 "price_quantity": int( price ) * quantity,
 		 "discount": discount,
 		 "computermodel": computermodel,
 		 "ids": component_ids,
 		 "subsystems": subsystems,
+		 "quantity": quantity,
 		 "currency": CurrentCurrency.postfix }
 	
+def quantity_get( request ):
+	if request.GET.has_key( "quantity" ) and request.GET["quantity"]:
+		try: return int( request.GET["quantity"] )
+		except: pass
+	return 1
+
 def components( request, computermodel ):
 	if request.GET.has_key( "components" ) and request.GET["components"]:
 		return request.GET["components"]
@@ -227,14 +236,14 @@ def __partner_user( request ):
 	if not user.is_anonymous() and not user.is_superuser:
 		try:
 			return user.get_profile()
-		except User.DoesNotExist:
+		except:
 			return None
 	else:
 		return None
 
 #@profile( "perform.prof" )
 def perform( request, computermodel_alias ):
-	computermodel = ComputerModel.objects.get( alias = computermodel_alias )
+	computermodel = get_object_or_404( ComputerModel, alias = computermodel_alias )
 	if computermodel.components.count() == 0:
 		return render_to_response( "computermodel_request.html",
 					 { "computermodel": computermodel,
@@ -242,18 +251,22 @@ def perform( request, computermodel_alias ):
 					   "settings": settings },
 					   context_instance=RequestContext(request) )
 	return render_to_response( "configurator.html",
-				 { "configurator": render( computermodel, components( request,
-				 						      computermodel ),
-										      user = __partner_user( request ) ),
+				 { "configurator": render( computermodel,
+				 			   components( request,
+								       computermodel ),
+							   quantity = quantity_get( request ),
+							   user = __partner_user( request ) ),
 				   "cache_timeout": settings.CACHE_MIDDLEWARE_SECONDS },
 				   context_instance=RequestContext(request) )
 
 def configurator( request, computermodel_alias ):
 	computermodel = get_object_or_404( ComputerModel, alias = computermodel_alias )
 	return render_to_response( "initial.html",
-				 { "configurator": render( computermodel, components( request,
-				 						      computermodel ),
-										      user = __partner_user( request ) ),
+				 { "configurator": render( computermodel,
+				 			   components( request,
+								       computermodel ),
+							   quantity = quantity_get( request ),
+							   user = __partner_user( request ) ),
 				   "cache_timeout": settings.CACHE_MIDDLEWARE_SECONDS,
 				   "settings": settings },
 				   context_instance=RequestContext(request) )
@@ -265,7 +278,7 @@ def __render_computermodel_request_email( computermodel, form ):
 				   "settings": settings } )
 
 def computermodel_request( request, computermodel_alias ):
-	computermodel = ComputerModel.objects.get( alias = computermodel_alias )
+	computermodel = get_object_or_404( ComputerModel, alias = computermodel_alias )
 	form = ComputerModelRequestForm( request.POST )
 	if form.is_valid():
 		send_mail( "%s %s" % ( _("Request from"), settings.ORDER_SUBJECT_FROM ),

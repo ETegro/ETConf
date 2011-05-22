@@ -70,8 +70,12 @@ def __check_google_conversions( aliases ):
 @never_cache
 def order_create( request, computermodel_alias ):
 	computermodel = get_object_or_404( ComputerModel, alias = computermodel_alias )
-	rendered = giver.render( computermodel, giver.components( request, computermodel ) )
+	rendered = giver.render( computermodel,
+				 giver.components( request, computermodel ),
+				 quantity = giver.quantity_get( request ) )
 	configuration = { "price": rendered["price"],
+			  "price_quantity": rendered["price_quantity"],
+			  "quantity": rendered["quantity"],
 			  "currency": rendered["currency"],
 			  "configuration": rendered["ids"],
 			  "computer_model": rendered["computermodel"] }
@@ -140,7 +144,7 @@ def order_show( request ):
 						      email = data["email"],
 						      telephone = data["telephone"],
 						      comment = data["comment"],
-						      price = sum([ o["price"] for o in orders ]),
+						      price = sum([ o["price_quantity"] for o in orders ]),
 						      currency = orders[0]["currency"] )
 			order_request.save()
 			body = __render_email( order_request, orders, partner )
@@ -177,7 +181,7 @@ def order_show( request ):
 			           "partner": partner,
 				   "form": form,
 				   "currency": Order.objects.filter( cookie_id = cookie_id )[0].get_configuration()["currency"],
-				   "total_price": sum([ o.get_configuration()["price"] for o in Order.objects.filter( cookie_id = cookie_id ) ]) } )
+				   "total_price": sum([ o.get_configuration()["price_quantity"] for o in Order.objects.filter( cookie_id = cookie_id ) ]) } )
 
 @never_cache
 def order_remove( request, order_id ):

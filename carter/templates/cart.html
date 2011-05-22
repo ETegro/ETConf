@@ -35,11 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	{% for order in orders %}
 	<tr>
 		<th>
+			{{ order.quantity }} *
 			<a href="{{ order.computer_model.get_url.0 }}">{{ order.computer_model.name }}</a>
 			<a href="{% url configurator.carter.views.order_remove order.id %}">[X]</a>
-			<a href="{{ order.computer_model.get_url.1.buy }}?previous_order={{ order.id }}&configuration={{ order.configuration }}">[{% trans "Edit" %}]</a>
+			<a href="{{ order.computer_model.get_url.1.buy }}?previous_order={{ order.id }}&configuration={{ order.configuration }}&quantity={{ order.quantity }}">[{% trans "Edit" %}]</a>
 		</th>
-		<th>{{ order.price }} {{ order.currency }}</th>
+		<th>{{ order.price_quantity }} {{ order.currency }}</th>
 	</tr>
 	<tr>
 		<td colspan="2"><dl>
