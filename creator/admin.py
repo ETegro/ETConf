@@ -31,10 +31,20 @@ class FeatureAdmin( admin.ModelAdmin ):
 
 class ComponentGroupAdmin( admin.ModelAdmin ):
 	ordering = [ "order" ]
-	search_fields = [ "name", "description" ]
-	list_display = [ "name", "subsystem", "equality", "link_move" ]
-	list_filter = [ "equality", "subsystem" ]
-	fields = [ "name", "description", "subsystem", "equality" ]
+	search_fields = [ "name",
+	                  "description",
+			  "description_en" ]
+	list_display = [ "name",
+	                 "subsystem",
+			 "equality",
+			 "link_move" ]
+	list_filter = [ "equality",
+	                "subsystem" ]
+	fields = [ "name",
+	           "description",
+		   "description_en",
+		   "subsystem",
+		   "equality" ]
 	def link_move( self, component_group ):
 		return "<a href=\"%s\">&uarr;</a>&nbsp;<a href=\"%s\">&darr;</a>" % \
 			( reverse( "configurator.creator.views.move_component_group_up", args = [ component_group.id ] ),
@@ -44,9 +54,15 @@ class ComponentGroupAdmin( admin.ModelAdmin ):
 
 class ComponentGroupSubsystemAdmin( admin.ModelAdmin ):
 	ordering = [ "order" ]
-	search_fields = [ "name", "description" ]
+	search_fields = [ "name",
+	                  "description",
+	                  "description_en" ]
 	list_display = [ "name", "link_move" ]
-	fields = [ "name", "description", "explanation" ]
+	fields = [ "name",
+	           "description",
+	           "description_en",
+		   "explanation",
+		   "explanation_en" ]
 	def link_move( self, subsystem ):
 		return "<a href=\"%s\">&uarr;</a>&nbsp;<a href=\"%s\">&darr;</a>" % \
 			( reverse( "configurator.creator.views.move_subsystem_up", args = [ subsystem.id ] ),
@@ -56,7 +72,13 @@ class ComponentGroupSubsystemAdmin( admin.ModelAdmin ):
 
 class ComponentAdmin( admin.ModelAdmin ):
 	ordering = [ "order" ]
-	fields = [ "name", "description", "price", "is_percentage", "component_group" ]
+	fields = [ "name",
+	           "name_en",
+	           "description",
+	           "description_en",
+		   "price",
+		   "is_percentage",
+		   "component_group" ]
 	search_fields = [ "name", "description" ]
 	list_display = [ "name",
 			 "component_group",
@@ -121,9 +143,22 @@ class ComputerModelAdmin( admin.ModelAdmin ):
 	list_display = [ "name",
 			 "alias",
 			 "slogan",
+			 "category",
 			 "link_clone",
 			 "list_specifications" ]
-	fields = [ "name", "description", "alias", "slogan", "components", "is_action", "is_active", "url" ]
+	fields = [ "name",
+		   "description",
+		   "description_en",
+		   "alias",
+		   "slogan",
+		   "slogan_en",
+		   "category",
+		   "components",
+		   "is_action",
+		   "is_active",
+		   "url" ]
+	list_filter = [ "is_active",
+			"is_action" ]
 	def link_clone( self, computermodel ):
 		return "<a href=\"%s\">+</a>" % ( reverse( "configurator.creator.views.clone_computermodel",
 						  args = [ computermodel.id ] ) )
@@ -146,8 +181,12 @@ class CurrencyAdmin( admin.ModelAdmin ):
 	list_display = [ "name", "rate", "is_default" ]
 
 class SpecificationKeyAdmin( admin.ModelAdmin ):
-	list_display = [ "name", "is_summary", "link_move" ]
-	fields = [ "name", "is_summary" ]
+	list_display = [ "name",
+	                 "is_summary",
+			 "link_move" ]
+	fields = [ "name",
+	           "name_en",
+	           "is_summary" ]
 	ordering = [ "order" ]
 	def link_move( self, skey ):
 		return "<a href=\"%s\">&uarr;</a>&nbsp;<a href=\"%s\">&darr;</a>" % \
@@ -161,6 +200,14 @@ class SpecificationAdmin( admin.ModelAdmin ):
 	list_filter = [ "computermodel" ]
 	ordering = [ "skey__order" ]
 
+class CertificateAdmin( admin.ModelAdmin ):
+	list_display = [ "label", "url" ]
+
+class ComputerModelCategoryAdmin( admin.ModelAdmin ):
+	list_display = [ "label",
+			 "prefix",
+			 "description" ]
+
 admin.site.register( Feature, FeatureAdmin )
 admin.site.register( ComponentGroup, ComponentGroupAdmin )
 admin.site.register( ComponentGroupSubsystem, ComponentGroupSubsystemAdmin )
@@ -173,3 +220,5 @@ admin.site.register( Currency, CurrencyAdmin )
 admin.site.register( SpecificationKey, SpecificationKeyAdmin )
 admin.site.register( Specification, SpecificationAdmin )
 admin.site.register( Expanding, ExpandingAdmin )
+admin.site.register( Certificate, CertificateAdmin )
+admin.site.register( ComputerModelCategory, ComputerModelCategoryAdmin )

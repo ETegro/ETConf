@@ -25,8 +25,23 @@ import django.dispatch
 from configurator.creator.managers import *
 
 from docutils.core import publish_parts
+from django.utils.html import escape as html_escape
 
 import datetime
+import math
+
+########################################################################
+# Specific method creation functions for language-related descriptions
+########################################################################
+LANGUAGE_POSTFIX = { "ru": "",
+                     "en": "_en" }[ settings.LANGUAGE_CODE ]
+def __generic_s( self, name, data ):
+	name = name + LANGUAGE_POSTFIX
+	if type( data ) == str: setattr( self, name, data )
+	else: return getattr( self, name )
+
+def __register_s( obj, name ):
+	setattr( obj, "s" + name, lambda s, *data: __generic_s( s, name, data or [] ) )
 
 DEFAULT_CONFIGURATION_GROUPS = [ "PLATFORM", "CPU", "RAM", "HDD_SATA" ]
 
@@ -50,18 +65,22 @@ class Currency( models.Model ):
 class Feature( models.Model ):
 	name = models.CharField( _("Name"), max_length = 512 )
 	description = models.TextField( _("Description"), blank = True )
+	description_en = models.TextField( _("Description") + "_en", blank = True )
 	def __unicode__( self ):
 		return self.name
 	class Meta:
 		verbose_name = _("Feature")
 		verbose_name_plural = _("Features")
 		ordering = [ "name" ]
+__register_s( Feature, "description" )
 
 class ComponentGroupSubsystem( models.Model ):
 	objects = OrderManager()
 	name = models.CharField( _("Name"), max_length = 512 )
 	description = models.TextField( _("Description"), blank = True )
+	description_en = models.TextField( _("Description") + "_en", blank = True )
 	explanation = models.TextField( _("Explanation"), blank = True )
+	explanation_en = models.TextField( _("Explanation") + "_en", blank = True )
 	order = models.PositiveIntegerField( _("Order"), blank = True )
 	def __unicode__( self ):
 		return self.name
@@ -72,11 +91,14 @@ class ComponentGroupSubsystem( models.Model ):
 		verbose_name = _("Subsystem")
 		verbose_name_plural = _("Subsystems")
 		ordering = [ "name" ]
+__register_s( ComponentGroupSubsystem, "description" )
+__register_s( ComponentGroupSubsystem, "explanation" )
 
 class ComponentGroup( models.Model ):
 	objects = OrderManager()
 	name = models.CharField( _("Name"), max_length = 512 )
 	description = models.TextField( _("Description"), blank = True )
+	description_en = models.TextField( _("Description") + "_en", blank = True )
 	order = models.PositiveIntegerField( _("Order"), blank = True )
 	equality = models.BooleanField( _("Equality"), default = False )
 	subsystem = models.ForeignKey( ComponentGroupSubsystem,
@@ -91,10 +113,13 @@ class ComponentGroup( models.Model ):
 		verbose_name = _("Component group")
 		verbose_name_plural = _("Component groups")
 		ordering = [ "name" ]
+__register_s( ComponentGroup, "description" )
 
 class Component( models.Model ):
 	name = models.CharField( _("Name"), max_length = 512 )
+	name_en = models.CharField( _("Name") + "_en", max_length = 512 )
 	description = models.TextField( _("Description"), blank = True )
+	description_en = models.TextField( _("Description") + "_en", blank = True )
 	price = models.FloatField( _("Price"), blank = True )
 	is_percentage = models.BooleanField( _("Is percentage"), default = False )
 	component_group = models.ForeignKey( ComponentGroup,
@@ -119,11 +144,13 @@ class Component( models.Model ):
 			else: self.order = cs[-1].order + 1
 		super( Component, self ).save(*args, **kwargs)
 	def __unicode__( self ):
-		return self.name
+		return self.sname()
 	class Meta:
 		verbose_name = _("Component")
 		verbose_name_plural = _("Components")
 		ordering = [ "name" ]
+__register_s( Component, "name" )
+__register_s( Component, "description" )
 
 class Providing( models.Model ):
 	component = models.ForeignKey( Component, verbose_name = _("Component") )
@@ -170,10 +197,11 @@ class Expanding( models.Model ):
 class SpecificationKey( models.Model ):
 	objects = OrderManager()
 	name = models.CharField( _("Key name"), max_length = 512 )
+	name_en = models.CharField( _("Key name") + "_en", max_length = 512 )
 	order = models.PositiveIntegerField( _("Order"), blank = True )
 	is_summary = models.BooleanField( _("Is summary"), default = False )
 	def __unicode__( self ):
-		return unicode( self.name )
+		return self.sname()
 	def save( self, *args, **kwargs):
 		if not self.order: self.order = SpecificationKey.objects.last_order() + 1
 		super( SpecificationKey, self ).save(*args, **kwargs)
@@ -181,11 +209,48 @@ class SpecificationKey( models.Model ):
 		verbose_name = _("Specification key")
 		verbose_name_plural = _("Specification keys")
 		ordering = [ "name" ]
+__register_s( SpecificationKey, "name" )
+
+class Certificate( models.Model ):
+	url = models.CharField( _("URL"),
+				max_length = 128 )
+	label = models.CharField( _("Label"),
+				  max_length = 512 )
+	def __unicode__( self ):
+		return self.label
+	class Meta:
+		verbose_name = _("Certificate")
+		verbose_name_plural = _("Certificates")
+		ordering = [ "label" ]
+
+class ComputerModelCategory( models.Model ):
+	prefix = models.CharField( _("Prefix"), max_length = 128 )
+	label = models.CharField( _("Label"), max_length = 64 )
+	label_en = models.CharField( _("Label") + "_en", max_length = 64 )
+	description = models.TextField( _("Description"), blank = True, null = True )
+	description_en = models.TextField( _("Description") + "_en", blank = True, null = True )
+	certificates = models.ManyToManyField( Certificate,
+					       verbose_name = _("Certificates"),
+					       blank = True,
+					       null = True )
+	def __unicode__( self ):
+		return self.slabel()
+	class Meta:
+		verbose_name = _("Computermodel category")
+		verbose_name_plural = _("Computermodel categories")
+		ordering = [ "label" ]
+__register_s( ComputerModelCategory, "label" )
+__register_s( ComputerModelCategory, "description" )
 
 class ComputerModel( models.Model ):
 	name = models.CharField( _("Name"), max_length = 512 )
 	description = models.TextField( _("Description"), blank = True )
+	description_en = models.TextField( _("Description") + "_en", blank = True )
 	description_html = models.TextField( blank = True )
+	description_html_en = models.TextField( blank = True )
+	category = models.ForeignKey( ComputerModelCategory,
+				      verbose_name = _("Category"),
+				      null = True )
 	components = models.ManyToManyField( Component,
 					     verbose_name = _("Components"),
 					     null = True,
@@ -196,11 +261,16 @@ class ComputerModel( models.Model ):
 	is_active = models.BooleanField( _("Is active"),
 					 default = False )
 	url = models.CharField( _("Website URL"),
-				max_length = 512,
+				max_length = 128,
 				blank = True,
-				null = True )
+				null = True,
+				db_index = True )
 	default_price = models.FloatField( blank = True, null = True )
 	slogan = models.CharField( _("Slogan"),
+				   max_length = 512,
+				   blank = True,
+				   null = True )
+	slogan_en = models.CharField( _("Slogan") + "_en",
 				   max_length = 512,
 				   blank = True,
 				   null = True )
@@ -216,7 +286,11 @@ class ComputerModel( models.Model ):
 					      null = True )
 	def default_components( self ):
 		result = {}
-		for group in DEFAULT_CONFIGURATION_GROUPS:
+		if self.is_action:
+			groups_needed = [ "PLATFORM" ]
+		else:
+			groups_needed = DEFAULT_CONFIGURATION_GROUPS
+		for group in groups_needed:
 			components = self.components.filter( component_group__name = group ).order_by( "order" ).order_by( "price" )
 			if components.count() == 0: continue
 			component = components[0]
@@ -228,8 +302,8 @@ class ComputerModel( models.Model ):
 		return ",".join( [ "%d-%d" % ( c.id, q ) for c, q in self.default_components().iteritems() ] )
 	def get_default_price( self ):
 		if Currency.objects.filter( is_default = True ).count() == 0: return
-		return sum([ c.price * q for c, q in self.default_components().iteritems() ]) * \
-				Currency.objects.get( is_default = True ).rate
+		return math.floor( sum([ c.price * q for c, q in self.default_components().iteritems() ]) * \
+		                   Currency.objects.get( is_default = True ).rate + 0.5 )
 	def short_configuration( self ):
 		configuration = []
 		for c, q in self.default_components().iteritems():
@@ -239,17 +313,21 @@ class ComputerModel( models.Model ):
 			else: configuration.append( "%d x %s" % ( q, c ) )
 		return " / ".join( configuration )
 	def __url_for( self ):
-		if self.url: return "http://www.etegro.com/%s" % self.url
-		else: return "http://www.etegro.com/"
+		if self.url: return "/%s" % self.url
+		else: return "/"
 	def __buy_url_for( self ):
 		return "%s/buy" % self.__url_for()
 	def get_url( self ):
 		return ( self.__url_for(), { "buy": self.__buy_url_for() } )
 	def save( self, *args, **kwargs ):
-		if self.id: self.default_price = self.get_default_price()
-		self.description_html = publish_parts( self.description, writer_name="html4css1" )["fragment"]
+		if self.id:
+			self.default_price = self.get_default_price()
+			self.short_configuration_str = self.short_configuration()
+		self.description_html = publish_parts( html_escape( self.description ),
+						       writer_name="html4css1" )["fragment"]
+		self.description_html_en = publish_parts( html_escape( self.description_en ),
+						          writer_name="html4css1" )["fragment"]
 		self.last_modified = datetime.datetime.now()
-		self.short_configuration_str = self.short_configuration()
 		super( ComputerModel, self ).save(*args, **kwargs)
 	def __unicode__( self ):
 		return self.name
@@ -257,6 +335,9 @@ class ComputerModel( models.Model ):
 		verbose_name = _("Computer model")
 		verbose_name_plural = _("Computer models")
 		ordering = [ "name" ]
+__register_s( ComputerModel, "description" )
+__register_s( ComputerModel, "description_html" )
+__register_s( ComputerModel, "slogan" )
 
 class Specification( models.Model ):
 	computermodel = models.ForeignKey( ComputerModel, verbose_name = _("Computer model") )
@@ -282,7 +363,6 @@ class Substitution( models.Model ):
 	class Meta:
 		verbose_name = _("Substitution")
 		verbose_name_plural = _("Substitutions")
-
 
 ################################################################################
 # Signals
