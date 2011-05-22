@@ -20,10 +20,11 @@ from configurator.carter.models import *
 from django.utils.translation import ugettext as _
 
 class OrderRequestAdmin( admin.ModelAdmin ):
+	date_hierarchy = "created"
 	ordering = [ "created", "name", "company" ]
 	search_fields = [ "name", "company", "email", "telephone", "body" ]
-	list_display = [ "name", "company", "pred_body" ]
-	list_filter = [ "name", "company" ]
+	list_display = [ "name", "company", "created", "pred_body" ]
+	list_filter = [ "created", "name", "company" ]
 	def pred_body( self, order_request ):
 		return "<pre>%s</pre>" % order_request.body.replace("<","&lt;").replace(">","&gt;")
 	pred_body.allow_tags = True

@@ -51,7 +51,7 @@ class OrderRequest( models.Model ):
 	body = models.TextField( _("Body"), blank = True )
 	price = models.FloatField( _("Price"), blank = True )
 	currency = models.CharField( _("Currency"), max_length = 512 )
-	created = models.DateTimeField()
+	created = models.DateTimeField( _("Created") )
 	def save( self, *args, **kwargs ):
 		if not self.created: self.created = datetime.datetime.now()
 		super( OrderRequest, self ).save(*args, **kwargs)
