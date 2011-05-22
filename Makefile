@@ -25,17 +25,17 @@ sqlite-clean:
 	rm -f $(SQLITE_DB_PATH)
 
 mysql-clean:
-	echo "show tables" | mysql -u$(MYSQL_USER) $(MYSQL_NAME) | perl -ne 'chop; print "drop table $$_;\n" if /^(django|creator|carter|auth|partners)/' | mysql -u$(MYSQL_USER) $(MYSQL_NAME)
+	echo "show tables" | mysql -u$(MYSQL_USER) -p$(MYSQL_PASSWORD) $(MYSQL_NAME) | perl -ne 'chop; print "drop table $$_;\n" if /^(django|creator|carter|auth|partners)/' | mysql -u$(MYSQL_USER) -p$(MYSQL_PASSWORD) $(MYSQL_NAME)
 
 sync-base-sqlite: sqlite-clean
-	echo "WARNING: This target is only for SQlite-based database"
+	@echo "WARNING: This target is only for SQlite-based database"
 	sed -i "s/^DATABASE_ENGINE = .*$$/DATABASE_ENGINE = 'sqlite3'/" settings.py
 	sed -i "s/^DATABASE_NAME = .*$$/DATABASE_NAME = '$(shell echo $(SQLITE_DB_PATH) | sed 's/\//\\\//g')'/" settings.py
 	touch $(SQLITE_DB_PATH)
 	chmod 666 $(SQLITE_DB_PATH)
 
 sync-base-mysql: mysql-clean
-	echo "WARNING: This target is only for MySQL-based database"
+	@echo "WARNING: This target is only for MySQL-based database"
 	sed -i "s/^DATABASE_ENGINE = .*$$/DATABASE_ENGINE = 'mysql'/" settings.py
 	sed -i "s/^DATABASE_NAME = .*$$/DATABASE_NAME = '$(MYSQL_NAME)'/" settings.py
 	sed -i "s/^DATABASE_USER = .*$$/DATABASE_USER = '$(MYSQL_USER)'/" settings.py
@@ -47,7 +47,7 @@ postgresql-clean:
 	echo "DROP DATABASE $(MYSQL_NAME); CREATE DATABASE $(MYSQL_NAME)" | psql -U $(MYSQL_USER)
 
 sync-base-postgresql: postgresql-clean
-	echo "WARNING: This target is only for PostgreSQL-based database"
+	@echo "WARNING: This target is only for PostgreSQL-based database"
 	sed -i "s/^DATABASE_ENGINE = .*$$/DATABASE_ENGINE = 'postgresql_psycopg2'/" settings.py
 	sed -i "s/^DATABASE_NAME = .*$$/DATABASE_NAME = '$(MYSQL_NAME)'/" settings.py
 	sed -i "s/^DATABASE_USER = .*$$/DATABASE_USER = '$(MYSQL_USER)'/" settings.py
@@ -63,11 +63,11 @@ sync-mysql: sync-debug sync-images sync-fonts sync-stylesheet sync-cache-backend
 sync-postgresql: sync-debug sync-images sync-fonts sync-stylesheet sync-cache-backend sync-base-postgresql syncdb
 
 shell:
-	echo "from configurator.creator.models import *"
-	echo "from configurator.giver.views import *"
-	echo "from configurator.carter.models import *"
-	echo "from django.contrib.auth.models import User"
-	echo "from configurator.partners.models import *"
+	@echo "from configurator.creator.models import *"
+	@echo "from configurator.giver.views import *"
+	@echo "from configurator.carter.models import *"
+	@echo "from django.contrib.auth.models import User"
+	@echo "from configurator.partners.models import *"
 	$(CMD_MANAGE) shell
 
 example:
