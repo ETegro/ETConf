@@ -130,7 +130,20 @@ Example installation under Debian
 
 ::
 
-  % apt-get install python python-docutils python-flup python-memcache python-psycopg2 python-yaml make python-mysql memcached python-setuptools build-essential libfreetype6-dev python-dev python-imaging
+  % apt-get install python \
+                    python-docutils \
+                    python-flup \
+                    python-memcache \
+                    python-psycopg2 \
+                    python-yaml \
+                    make \
+                    python-mysqldb \
+                    memcached \
+                    python-setuptools \
+                    build-essential \
+                    libfreetype6-dev \
+                    python-dev \
+                    python-imaging
   % wget -O - http://www.djangoproject.com/download/1.1.1/tarball/ | gunzip -c | tar xvf -
   % pushd Django-1.1.1 && python setup.py install && popd && rm -fr Django-1.1.1
   % wget -O - http://rst2pdf.googlecode.com/files/rst2pdf-0.15.tar.gz | gunzip -c | tar xvf -
