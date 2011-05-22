@@ -1,0 +1,8 @@
+{% load humanize %}
+
+{% comment %}
+{{ c.quantity }} * {{ c.price|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span> =
+                   {{ c.price_quantity|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span>
+{% endcomment %}
+
+{{ c.price_quantity|intcomma }}&#160;<span class="configurator-currency">{{ c.currency }}</span>
