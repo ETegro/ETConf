@@ -8,7 +8,7 @@
 	<url>http://www.etegro.com/</url>
 	
 	<currencies>
-		<currency id="RUR" rate="1" plus="0"/>
+		<currency id="RUR" rate="1" />
 	</currencies>
 	
 	<categories>
@@ -18,8 +18,8 @@
 	
 	<offers>
 		{% for offer in offers %}
-		<offer id="{{ offer.id }}" type="vendor.model" available="true">
-			<url>{{ offer.url }}/buy</url>
+		<offer id="{{ offer.id }}" type="vendor.model" available="false">
+			<url>http://www.etegro.com{{ offer.url }}/buy</url>
 			<price>{{ offer.price }}</price>
 			<currencyId>RUR</currencyId>
 			<categoryId>10</categoryId>
@@ -27,9 +27,9 @@
 			<delivery>true</delivery>
 			<typePrefix>Сервер</typePrefix>
 			<vendor>ETegro</vendor>
-			<vendorCode>{{ offer.vendorcode }}</vendorCode>
 			<model>{{ offer.model }}</model>
 			<description>{{ offer.description }}</description>
+			<sales_notes>Предоплата. Обычное время поставки: 5 рабочих дней</sales_notes>
 			<manufacturer_warranty>true</manufacturer_warranty>
 			<country_of_origin>Россия</country_of_origin>
 
