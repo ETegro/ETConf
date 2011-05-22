@@ -1,18 +1,18 @@
-/* 
+/*
  * ETConf -- web-based user-friendly computer hardware configurator
  * Copyright (C) 2010-2011 ETegro Technologies, PLC <http://etegro.com/>
  *                         Sergey Matveev <sergey.matveev@etegro.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -21,16 +21,29 @@
 
 var FLOWER_PATH = "/img/configurator/flower.gif";
 
+// Dirty hack to force these i18n strings to be parsed
+gettext("Updating");
+gettext("Ready");
+gettext("Shit happens");
+gettext("Adding to cart");
+gettext("Failed");
+gettext("Sending request");
+
 var IDS = {};
+var QUANTITY = 1;
 var Flower = new Image();
+
+function update_quantity() {
+	QUANTITY = $("overall_quantity").value;
+};
 
 function parse_get_request() {
 	var get = {};
 	var get_part = ("" + window.location).split("?")[1];
 	if( ! get_part ){ return {} };
 	get_part.split("&").each( function( part ) {
-		part_key = part.split("=")[0];
-		part_value = part.split("=")[1];
+		var part_key = part.split("=")[0];
+		var part_value = part.split("=")[1];
 		get[ part_key ] = part_value;
 	} );
 	return get;
@@ -39,17 +52,18 @@ function parse_get_request() {
 function parse_ids( ids ){
 	ids.split(",").each( function( pair ){
 		// [ id, quantity ] = pair.split("-"); -- This is not working in lame browsers
-		id = pair.split("-")[0];
-		quantity = pair.split("-")[1];
+		var id = pair.split("-")[0];
+		var quantity = pair.split("-")[1];
 		IDS[ id ] = quantity;
 	} );
 };
 
-window.onload = function(){
+document.observe("dom:loaded", function(){
 	Flower.src = FLOWER_PATH;
 
 	if( typeof parse_get_request()["previous_order"] != "undefined" ){
 		parse_ids( parse_get_request()["configuration"] );
+		QUANTITY = parse_get_request()["quantity"];
 		configurate_perform();
 		return;
 	};
@@ -64,6 +78,8 @@ window.onload = function(){
 			$("configurator").innerHTML = response;
 			$("loader").innerHTML = gettext("Ready");
 			parse_ids( $("ids").value );
+			update_quantity();
+			add_event_handlers();
 			remove_alone_selects();
 		},
 		on404: function() {
@@ -73,7 +89,7 @@ window.onload = function(){
 			$("configurator").innerHTML = "<p>" + gettext("Unable to retrieve initial configuration") + "</p>";
 		}
 	} );
-};
+});
 
 function remove_alone_selects() {
 	$$("#configurator select").findAll(
@@ -91,21 +107,56 @@ function serialize_ids() {
 	return ids.join(",");
 };
 
-function configurate_select( id, quantity ) {
+function configurate_select() {
+};
+
+function configurate_input() {
+};
+
+function add_event_handlers() {
+	$$("#configurator select").each(
+		function(select){ Event.observe(select, 'change', handle_select.bindAsEventListener(select)); }
+	);
+	$$("#configurator input").each(
+		function(input){ Event.observe(input, 'click', handle_input.bindAsEventListener(input)); }
+	);
+};
+
+function handle_select() {
+	var select = this;
+	var id = select.name.split("-")[1];
+	var input = $("input-" + id);
+	var quantity = select.value;
+
+	if (input.type == "radio") { clear_radio(input.name); }
 	IDS[ id ] = quantity;
 	configurate_perform();
 };
 
-function configurate_input( id ) {
-        var input_id = $("input-" + id);
-	if( input_id.type == "radio" ){
-		$$("#configurator input[name=" + input_id.name +"]" ).each( function( e ){ delete IDS[ e.value ] } );
-		IDS[ id ] = $("select-" + id).value;
+function handle_input() {
+	var input = this;
+	var id = this.value;
+	var select = $("select-" + id);
+	var quantity = select.value;
+
+	if ( input.type == "radio" ){
+		//update only if the current radio button switched on
+		if (IDS[ id ] == undefined) {
+			clear_radio(input.name);
+			IDS[ id ] = quantity;
+			configurate_perform();
+		};
 	} else {
-		input_id.checked ? IDS[ id ] = $("select-" + id).value : delete IDS[ id ];
+		input.checked ? (IDS[ id ] = quantity) : (delete IDS[ id ]);
+		configurate_perform();
 	};
-	configurate_perform();
 };
+
+function clear_radio(name) {
+	$$("#configurator input[name=" + name +"]" ).each(
+		function(input) { delete IDS[ input.value ]; }
+	);
+}
 
 function flowerize_inputs() {
 	$$("#configurator .input-section").each( function(i){ i.innerHTML = "<img alt='flower' src='" + Flower.src + "' />" } );
@@ -115,7 +166,8 @@ function flowerize_inputs() {
 function configurate_perform() {
 	new Ajax.Request( $("url").value, {
 		method: "get",
-		parameters: { components: serialize_ids() },
+		parameters: { components: serialize_ids(),
+			      quantity: QUANTITY },
 		onLoading: function(){
 			flowerize_inputs();
 			$("loader").innerHTML = gettext("Updating");
@@ -124,6 +176,7 @@ function configurate_perform() {
 			var response = transport.responseText;
 			$("configurator").innerHTML = response;
 			$("loader").innerHTML = gettext("Ready");
+			add_event_handlers();
 			remove_alone_selects();
 		},
 		onFailure: function(){
@@ -137,6 +190,7 @@ function cart_add( url ) {
 		method: "get",
 		parameters: {
 			components: serialize_ids(),
+			quantity: QUANTITY,
 			previous_order: parse_get_request()["previous_order"]
 		},
 		onLoading: function(){
